@@ -31,7 +31,7 @@ export abstract class Resource {
     return new NotFoundResponse();
   }
 
-  async create<T>(body: T, opt?: ExpData): Promise<Response> {
+  async create(body: any, opt?: ExpData): Promise<Response> {
     return new NotImplementedResponse();
   }
 

@@ -1,21 +1,9 @@
-import express, { Application, Request, Response } from "express";
-import morgan from "morgan";
-import { SongsController } from "./controllers/songsController";
-import { RootController } from "./controllers/rootController";
+import app from "./app";
 
-const app: Application = express();
 const port = 3000;
 
-// Body parsing Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
-
-// Routes
-app.use("/songs", new SongsController().router);
-app.use("/", new RootController().router);
-
 try {
+  console.log(`Trying to run in ${process.env["NODE_ENV"]?.trim()} enviroment`);
   app.listen(port, (): void => {
     console.log(`Listening on port ${port}`);
   });
