@@ -1,11 +1,7 @@
-import { Request } from "express";
 import { ExpData, Resource } from "../core/Resource";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import { NotImplementedResponse, Response } from "../core/Response";
 import db from "../core/Database";
 import { Song, SongMeta } from "../models/Song";
-import { title } from "process";
 import { Author } from "../models/Author";
 import { VersionedContent } from "../models/VersionedContent";
 import { User } from "../models/User";

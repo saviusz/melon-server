@@ -3,6 +3,8 @@ import { SongMeta } from "../models/Song";
 import db from "../core/Database";
 
 export class SongKnexService implements SongService {
+  static id = "songsService";
+
   async getIds(): Promise<string[]> {
     const ids = await db("titleOnSong").distinct("songId").select("songId");
     return ids.map((x) => x.songId);
