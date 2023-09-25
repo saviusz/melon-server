@@ -22,7 +22,7 @@
     "vitest": "^0.34.5"
   },
   "scripts": {
-    "start:dev": "set NODE_ENV='development' & ts-node-dev ./src/main.ts",
+    "start:dev": "set NODE_ENV=development & ts-node-dev ./src/main.ts",
     "test": "vitest"
   },
   "author": "",

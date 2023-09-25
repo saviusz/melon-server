@@ -1,11 +1,15 @@
-import { ExpData, Resource } from "../core/Resource";
-import { NotImplementedResponse, Response } from "../core/Response";
+import { Resource } from "../core/Resource";
+import {
+  NotFoundResponse,
+  NotImplementedResponse,
+  Response,
+  ServerErrorResponse,
+} from "../core/Response";
 import db from "../core/Database";
-import { Song, SongMeta } from "../models/Song";
-import { Author } from "../models/Author";
-import { VersionedContent } from "../models/VersionedContent";
-import { User } from "../models/User";
+import { SongMeta } from "../models/Song";
 import { SongKnexService } from "../services/SongsService.knex";
+import { AuthorKnexService } from "../services/AuthorsService.knex";
+import { CustomError, ErrorType } from "../core/Error";
 
 export interface CreateSongDtO {
   titles: string[];
@@ -23,45 +27,33 @@ export interface CreateSongDtO {
 
 export class SongsController extends Resource {
   songsService = new SongKnexService();
+  authorsService = new AuthorKnexService();
 
   async getMultiple(): Promise<Response> {
-    const outputList = [];
+    const outputList: SongMeta[] = [];
 
     for (const id of await this.songsService.getIds()) {
-      const titles = await this.songsService.getSongTitles(id);
-
-      const authorsResponse = await db("authorOnSong")
-        .join("author", "author.authorId", "authorOnSong.authorId")
-        .where({ songId: id })
-        .select();
-
-      const authors = authorsResponse.map(
-        (x) => new Author(x.authorId, x.name, x.surname, x.pseudonym)
-      );
-
-      outputList.push(new SongMeta(id, titles, authors, []));
+      outputList.push(await this.songsService.getMeta(id));
     }
 
     return new Response(outputList);
   }
 
   async getOne(id: string): Promise<Response> {
-    const titlesResponse = await db("titleOnSong")
-      .where({ songId: id })
-      .select("title");
+    try {
+      const song = await this.songsService.getSong(id);
+      return new Response(song);
+    } catch (error) {
+      console.log(error);
+      const err = error as CustomError;
+      switch (err.type) {
+        case ErrorType.NotFound:
+          return new NotFoundResponse(err.message);
 
-    const titles = titlesResponse.map((x) => x.title);
-    // .join("authorOnSong", "titleOnSong.songId", "authorOnSong.songId")
-    // .join("author", "authorOnSong.authorId", "author.authorId");
-
-    const output = new Song(
-      id,
-      titles,
-      [],
-      [],
-      new VersionedContent("", "", new User("", "savi"), [])
-    );
-    return new Response(output);
+        default:
+          return new ServerErrorResponse(err.message);
+      }
+    }
   }
 
   async create(body: CreateSongDtO): Promise<Response> {
