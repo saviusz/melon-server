@@ -1,6 +1,45 @@
 [
   {
     "type": "verse",
-    "line": []
+    "lines": [
+      {
+        "text": "Zapomniałem nakręcić czas",
+        "chords": [
+          {"core": "f", "isMinor": false},
+          {"core": "a", "isMinor": true}
+        ]
+      },
+      {
+        "text": "I zapomniałem rozpocząć nowy dzień",
+        "chords": [
+          {"core": "g", "isMinor": false},
+          {"core": "d", "isMinor": false},
+          {"core": "f", "isMinor": false}
+        ]
+      }
+    ]
+  },
+  {
+    "type": "bridge",
+    "lines": [
+      {
+        "text": "A może ja jestem opowieść zmęczonych ust",
+        "chords": [
+          {"core": "f", "isMinor": false},
+          {"core": "a", "isMinor": true},
+          {"core": "g", "isMinor": false},
+          {"core": "d", "isMinor": false}
+        ]
+      },
+      {
+        "text": "Znudziłem się bogu, w połowie, w połowie",
+        "chords": [
+          {"core": "f", "isMinor": false},
+          {"core": "a", "isMinor": true},
+          {"core": "g", "isMinor": false},
+          {"core": "d", "isMinor": false}
+        ]
+      }
+    ]
   }
 ]

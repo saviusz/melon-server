@@ -57,15 +57,25 @@ export class SongsController extends Resource {
   }
 
   async create(body: CreateSongDtO): Promise<Response> {
-    const songId = await db.fn.uuid();
-    db.transaction(async (trx) => {
-      trx("titlesOnSong").insert(
-        body.titles.map((title) => ({
-          songId: songId,
-          title: title,
-        }))
-      );
-    });
-    return new NotImplementedResponse();
+    
+    const resp = await this.authorsService.addAuthor("snowy", "kurde", "autor");
+
+    // const songId = await db.fn.uuid();
+
+    // db.transaction(async (trx) => {
+    //   trx("titlesOnSong").insert(
+    //     body.titles.map((title) => ({
+    //       songId: songId,
+    //       title: title,
+    //     }))
+    //   );
+    //   trx("authorOnSong").insert(
+    //     body.titles.map((title) => ({
+    //       songId: songId,
+    //       title: title,
+    //     }))
+    //   );
+    // });
+    return new Response(resp);
   }
 }

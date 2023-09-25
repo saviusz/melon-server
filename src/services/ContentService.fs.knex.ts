@@ -22,10 +22,10 @@ export class ContentFilesystemKnexService implements ContentService {
     const file = await readFile(`${filePath}/${response.filename}`, {
       encoding: "utf8",
     });
-    const parts = JSON.parse(file) as Part[];
+    const parts = JSON.parse(file).map((x: any) => Part.fromJSON(x));
 
     return new VersionedContent(
-      response.id,
+    response.id,
       response.name,
       new User(response.versionAuthorId, "placeholder"),
       parts

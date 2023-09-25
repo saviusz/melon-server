@@ -12,7 +12,7 @@ export class NotFoundError extends CustomError {
   constructor(nameOfItem: string, id?: string) {
     super(
       ErrorType.NotFound,
-      `Not found ${nameOfItem}` + !!id ? `with id '${id}'` : ""
+      `Not found ${nameOfItem}` + (!!id ? ` with id '${id}'` : "")
     );
   }
 }

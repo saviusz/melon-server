@@ -40,7 +40,7 @@ export class NotFoundResponse extends Response {
   constructor(body?: any) {
     super({
       Status: 404,
-      Reason: "Not Found",
+      Reason: body,
     });
     this.status(Status.NotFound);
   }
