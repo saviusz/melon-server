@@ -19,7 +19,7 @@ export abstract class Resource {
     );
 
     this._router.post("/", (req, res) =>
-      this.getOne(req.body, { req, res }).then((x) => x.toExpress(res))
+      this.create(req.body, { req, res }).then((x) => x.toExpress(res))
     );
   }
 
