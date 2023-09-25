@@ -26,11 +26,21 @@ export class Response {
   }
 }
 
+export class ServerErrorResponse extends Response {
+  constructor(body?: any) {
+    super({
+      Status: 500,
+      Reason: "Internal Server Error",
+    });
+    this.status(Status.InternalServerError);
+  }
+}
+
 export class NotFoundResponse extends Response {
   constructor(body?: any) {
     super({
       Status: 404,
-      Reason: "NotFound",
+      Reason: "Not Found",
     });
     this.status(Status.NotFound);
   }

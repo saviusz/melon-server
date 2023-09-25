@@ -22,6 +22,13 @@ export async function up(knex: Knex): Promise<void> {
       table.uuid("authorId").references("authorId").inTable("author");
       table.uuid("songId");
       table.primary(["authorId", "songId"]);
+    })
+    .createTable("versionedContentOnSong", (table) => {
+      table.uuid("contentId").primary();
+      table.uuid("songId");
+      table.string("name");
+      table.uuid("versionAuthorId");
+      table.string("filename");
     });
 }
 
@@ -30,5 +37,6 @@ export async function down(knex: Knex): Promise<void> {
     .dropTable("textAuthorOnSong")
     .dropTable("authorOnSong")
     .dropTable("titleOnSong")
+    .dropTable("versionedContentOnSong")
     .dropTable("author");
 }
