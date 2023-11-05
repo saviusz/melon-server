@@ -26,6 +26,7 @@ export interface CreateSongDtO {
 }
 
 export class SongsController extends Resource {
+
   songsService = new SongKnexService();
   authorsService = new AuthorKnexService();
 
@@ -57,7 +58,7 @@ export class SongsController extends Resource {
   }
 
   async create(body: CreateSongDtO): Promise<Response> {
-    
+
     const resp = await this.authorsService.addAuthor("snowy", "kurde", "autor");
 
     // const songId = await db.fn.uuid();
@@ -78,4 +79,5 @@ export class SongsController extends Resource {
     // });
     return new Response(resp);
   }
+
 }
