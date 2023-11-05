@@ -5,7 +5,9 @@ import { ParsedQs } from "qs";
 import { Response } from "../core/Response";
 
 export class RootController extends Resource {
+
   async getMultiple(): Promise<Response> {
     return new Response({ Wszystko: "ok" });
   }
+
 }

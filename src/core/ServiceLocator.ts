@@ -1,7 +1,8 @@
 import { Service } from "../interfaces/Service";
 
 export class ServiceLocator {
-  private static singleton: ServiceLocator;
+
+  private static singleton : ServiceLocator;
   private services = new Map<string, Service>();
 
   constructor() {
@@ -18,4 +19,5 @@ export class ServiceLocator {
     if (service == undefined) throw new Error(`Can't find service ${name}`);
     return service;
   }
+
 }

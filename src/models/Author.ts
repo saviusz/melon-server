@@ -1,8 +1,10 @@
 export class Author {
+
   constructor(
-    public readonly id: String,
-    public readonly name?: String,
-    public readonly surname?: String,
-    public readonly pseudonym?: String
+    public readonly id: string,
+    public readonly name?: string,
+    public readonly surname?: string,
+    public readonly pseudonym?: string
   ) {}
+
 }

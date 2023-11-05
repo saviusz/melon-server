@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     .createTable("titleOnSong", (table) => {
       table.uuid("songId");
       table.string("title");
-      table.primary(["songId", "title"]);
+      table.primary([ "songId", "title" ]);
     })
     .createTable("author", (table) => {
       table.uuid("authorId").primary();
@@ -14,14 +14,16 @@ export async function up(knex: Knex): Promise<void> {
       table.string("pseudonym");
     })
     .createTable("authorOnSong", (table) => {
-      table.uuid("authorId").references("authorId").inTable("author");
+      table.uuid("authorId").references("authorId")
+        .inTable("author");
       table.uuid("songId");
-      table.primary(["authorId", "songId"]);
+      table.primary([ "authorId", "songId" ]);
     })
     .createTable("textAuthorOnSong", (table) => {
-      table.uuid("authorId").references("authorId").inTable("author");
+      table.uuid("authorId").references("authorId")
+        .inTable("author");
       table.uuid("songId");
-      table.primary(["authorId", "songId"]);
+      table.primary([ "authorId", "songId" ]);
     })
     .createTable("versionedContentOnSong", (table) => {
       table.uuid("contentId").primary();

@@ -8,12 +8,14 @@ import { AuthorKnexService } from "./AuthorsService.knex";
 import { ContentFilesystemKnexService } from "./ContentService.fs.knex";
 
 export class SongKnexService implements SongService {
+
   static id = "songsService";
   authorsService = new AuthorKnexService();
   contentService = new ContentFilesystemKnexService();
 
   async getIds(): Promise<string[]> {
-    const ids = await db("titleOnSong").distinct("songId").select("songId");
+    const ids = await db("titleOnSong").distinct("songId")
+      .select("songId");
     return ids.map((x) => x.songId);
   }
 
@@ -45,4 +47,5 @@ export class SongKnexService implements SongService {
 
     return new Song(id, titles, authors, textAuthors, version);
   }
+
 }
