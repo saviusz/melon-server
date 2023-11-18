@@ -6,4 +6,9 @@ export interface SongService extends Service {
   getMeta(id: string): Promise<SongMeta>;
   getIds(): Promise<string[]>;
   getSong(id: string): Promise<Song>;
+  createSong(data: {
+    titles        : string[];
+    authorIds     : string[];
+    textAuthorIds : string[];
+  }): Promise<SongMeta>;
 }

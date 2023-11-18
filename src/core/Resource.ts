@@ -1,6 +1,7 @@
 import express, { Request, Response as ExpResponse } from "express";
-import { STATUS_CODES } from "http";
-import { NotFoundResponse, NotImplementedResponse, Response } from "./Response";
+import { AsyncResponse } from "./Response";
+import NotImplementedError from "./errors/NotImplementedError";
+import NotFoundError from "./errors/NotFoundError";
 
 export interface ExpData {
   req : Request;
@@ -12,22 +13,39 @@ export abstract class Resource {
   private _router;
   constructor() {
     this._router = express.Router();
-    this._router.get("/", (req, res) => this.getMultiple({ req, res }).then((x) => x.toExpress(res)));
-    this._router.get("/:id", (req, res) => this.getOne(req.params.id, { req, res }).then((x) => x.toExpress(res)));
+    this._router.get("/", (req, res) =>
+      this
+        .getMultiple({ req, res })
+        .then((x) => x.toExpress(res)));
 
-    this._router.post("/", (req, res) => this.create(req.body, { req, res }).then((x) => x.toExpress(res)));
+    this._router.get("/:id", (req, res) =>
+      this
+        .getOne(req.params.id, { req, res })
+        .then((x) => x.toExpress(res)));
+
+    this._router.post("/", (req, res) =>
+      this
+        .create(req.body, { req, res })
+        .then((x) => x.toExpress(res)));
   }
 
-  async getMultiple(opt?: ExpData): Promise<Response> {
-    return new NotFoundResponse();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getMultiple(opt?: ExpData): AsyncResponse<unknown> {
+    throw new NotFoundError();
   }
 
-  async getOne(id: string, opt?: ExpData): Promise<Response> {
-    return new NotFoundResponse();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async getOne(id: string, opt?: ExpData): AsyncResponse<unknown> {
+    throw new NotFoundError();
   }
 
-  async create(body: any, opt?: ExpData): Promise<Response> {
-    return new NotImplementedResponse();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async create(body: unknown, opt?: ExpData): AsyncResponse<unknown> {
+    throw new NotImplementedError();
+  }
+
+  async delete(): AsyncResponse<unknown> {
+    throw new NotImplementedError();
   }
 
   get router() {

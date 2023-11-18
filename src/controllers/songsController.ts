@@ -1,36 +1,26 @@
 import { Resource } from "../core/Resource";
-import {
-  NotFoundResponse,
-  NotImplementedResponse,
-  Response,
-  ServerErrorResponse,
-} from "../core/Response";
-import db from "../core/Database";
-import { SongMeta } from "../models/Song";
+import { Response, AsyncResponse } from "../core/Response";
+import { Song, SongMeta } from "../models/Song";
 import { SongKnexService } from "../services/SongsService.knex";
 import { AuthorKnexService } from "../services/AuthorsService.knex";
-import { CustomError, ErrorType } from "../core/Error";
+import { SongService } from "../interfaces/SongsService";
+import NotFoundError from "../core/errors/NotFoundError";
+import NotImplementedError from "../core/errors/NotImplementedError";
+import { Validator } from "../core/validator";
 
 export interface CreateSongDtO {
-  titles: string[];
-  //   authors: Array<{
-  //     name?: string;
-  //     surname: string;
-  //     psudonym: string;
-  //   }>;
-  //   textAuthors: Array<{
-  //     name?: string;
-  //     surname: string;
-  //     psudonym: string;
-  //   }>;
+  titles        : string[];
+  authorIds     : string[];
+  textAuthorIds : string[];
 }
 
 export class SongsController extends Resource {
 
-  songsService = new SongKnexService();
+  songsService : SongService = new SongKnexService();
   authorsService = new AuthorKnexService();
 
-  async getMultiple(): Promise<Response> {
+  async getMultiple(): AsyncResponse<Array<SongMeta>> {
+
     const outputList: SongMeta[] = [];
 
     for (const id of await this.songsService.getIds()) {
@@ -40,44 +30,45 @@ export class SongsController extends Resource {
     return new Response(outputList);
   }
 
-  async getOne(id: string): Promise<Response> {
+  async getOne(id: string): AsyncResponse<Song> {
+
     try {
+
       const song = await this.songsService.getSong(id);
       return new Response(song);
-    } catch (error) {
-      console.log(error);
-      const err = error as CustomError;
-      switch (err.type) {
-        case ErrorType.NotFound:
-          return new NotFoundResponse(err.message);
 
-        default:
-          return new ServerErrorResponse(err.message);
-      }
+    } catch (error) {
+
+      console.log(error);
+      throw new NotFoundError();
+
     }
   }
 
-  async create(body: CreateSongDtO): Promise<Response> {
+  async create(body: CreateSongDtO): AsyncResponse<unknown> {
 
-    const resp = await this.authorsService.addAuthor("snowy", "kurde", "autor");
+    const titleErrors = new Validator()
+    .isArray()
+    .isNotEmpty()
+    .getFails(body.titles);
 
-    // const songId = await db.fn.uuid();
+    return new Response(
+      {
+        errors: [],
+        input: body
+      }
+    );
 
-    // db.transaction(async (trx) => {
-    //   trx("titlesOnSong").insert(
-    //     body.titles.map((title) => ({
-    //       songId: songId,
-    //       title: title,
-    //     }))
-    //   );
-    //   trx("authorOnSong").insert(
-    //     body.titles.map((title) => ({
-    //       songId: songId,
-    //       title: title,
-    //     }))
-    //   );
-    // });
-    return new Response(resp);
+    throw new NotImplementedError();
+
+    const missingProps = [];
+
+    if (body.titles == undefined || body.titles.length < 1) missingProps.push("titles");
+
+    // if (missingProps.length > 0) throw new MissingPropsResponse(missingProps);
+
+
+    return new Response({});
   }
 
 }

@@ -51,7 +51,6 @@
             "error",
             "multiline-arguments"
         ],
-        "@stylistic/implicit-arrow-linebreak": "error",
         "@stylistic/indent": [
             "error",
             2,
@@ -167,10 +166,10 @@
             {
                 "blankLine": "always",
                 "prev": [
-                    "case",
-                    "default"
+                    "break",
+                    "return"
                 ],
-                "next": "*"
+                "next": ["case", "default"]
             }
         ],
         "@stylistic/quote-props": [

@@ -1,12 +1,9 @@
-import { Request } from "express";
 import { Resource } from "../core/Resource";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
-import { Response } from "../core/Response";
+import { AsyncResponse, Response } from "../core/Response";
 
 export class RootController extends Resource {
 
-  async getMultiple(): Promise<Response> {
+  async getMultiple(): AsyncResponse<unknown> {
     return new Response({ Wszystko: "ok" });
   }
 

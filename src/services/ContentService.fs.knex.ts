@@ -7,7 +7,7 @@ import {
   VersionedContent,
   VersionedContentMeta,
 } from "../models/VersionedContent";
-import { NotFoundError } from "../core/Error";
+// import { NotFoundError } from "../core/Error";
 
 const filePath = "./data/songs";
 
@@ -18,10 +18,10 @@ export class ContentFilesystemKnexService implements ContentService {
       .where({ songId: songId })
       .first();
 
-    if (!response) throw new NotFoundError("version on song", songId);
+    // if (!response) throw new Error("Dziwny Error");
 
     const file = await readFile(`${filePath}/${response.filename}`, { encoding: "utf8" });
-    const parts = JSON.parse(file).map((x: any) => Part.fromJSON(x));
+    const parts : Part[] =  JSON.parse(file);
 
     return new VersionedContent(
       response.id,
