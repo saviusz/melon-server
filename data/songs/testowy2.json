@@ -1,0 +1,257 @@
+[
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "text": "Z łąk jasnych zbiegła tu",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Prosto do mojego snu",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Gdzie rośnie tyle traw",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Żeby mogły ukryć nas",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "text": "Dziewczyna rumiankowa",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Wśród białych kwiatów tańczy",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "O mnie mało sobie dba",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Nie wie jeszcze, że to ja",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "lines": [
+        {
+          "text": "Ile jabłek na jabłoni",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Tyle lat Cię będę gonił",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "W mysiej dziurze czy na chmurze",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Nie ukryjesz się na dłużej",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "chorus",
+      "lines": [
+        {
+          "text": "Ile jabłek na czereśni",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Tyle lat, tyle lat Cię będę pieścił",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "W mysiej dziurze czy na chmurze",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Wszedzie znajdę Cię",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "text": "Z wysokich zbiegła gór",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Gdzie sosnowy szumi bór",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Gdzie rośnie taki las",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "W którym nik nie znajdzie nas",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "verse",
+      "lines": [
+        {
+          "text": "Herbaty zaparzonej",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Nad kubkiem Twoje oczy",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "Co nie widzą jeszcze mnie",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "I nie wiedzą, że to my",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        },
+        {
+          "text": "",
+          "chords": [
+            {
+              "coreNote": "a",
+              "isMinor": false
+            }
+          ]
+        }
+      ]
+    }
+  ]
