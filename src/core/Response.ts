@@ -3,17 +3,19 @@ import { Response as ExpResponse } from "express";
 export enum Status {
   OK = 200,
   Created = 201,
+  BadRequest = 400,
   NotFound = 404,
   InternalServerError = 500,
   NotImplemented = 501,
 }
 
-export class Response {
+export type AsyncResponse<T> = Promise<Response<T>>;
+export class Response<T> {
 
   private _status : Status = Status.OK;
-  private _body   : any;
+  private _body   : T;
 
-  constructor(body: any) {
+  constructor(body: T) {
     this._body = body;
   }
 
@@ -28,9 +30,9 @@ export class Response {
 
 }
 
-export class ServerErrorResponse extends Response {
+/* export class ServerErrorResponse extends Response<T> {
 
-  constructor(body?: any) {
+  constructor() {
     super({
       Status : 500,
       Reason : "Internal Server Error",
@@ -54,7 +56,7 @@ export class NotFoundResponse extends Response {
 
 export class NotImplementedResponse extends Response {
 
-  constructor(body?: any) {
+  constructor(body?: unknown) {
     super({
       Status : 501,
       Reason : "Method not implemented",
@@ -63,3 +65,25 @@ export class NotImplementedResponse extends Response {
   }
 
 }
+
+export class BadRequestResponse extends Response {
+
+  constructor(description: string) {
+    super({
+      Status      : 400,
+      Reason      : "Bad Request",
+      Description : description,
+    });
+    this.status(Status.BadRequest);
+  }
+
+} */
+
+/* export class MissingPropsResponse extends BadRequestResponse {
+
+  constructor(missingProps: string[]) {
+    super(`Missing props: ${missingProps.join(", ")}`);
+  }
+
+}
+ */

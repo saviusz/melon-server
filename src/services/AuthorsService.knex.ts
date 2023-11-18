@@ -1,4 +1,3 @@
-import knex from "knex";
 import db from "../core/Database";
 import { AuthorService } from "../interfaces/AuthorService";
 import { Author } from "../models/Author";
