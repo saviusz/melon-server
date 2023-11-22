@@ -1,23 +1,44 @@
-import db from "../core/Database";
+import BadRequestError from "../core/errors/BadRequestError";
+import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
+import { IAuthorsRepository } from "../repositories/Authors/AuthorsRepository.abstract";
+import { KnexAuthorsRepository } from "../repositories/Authors/AuthorsRepository.knex";
 
-export class AuthorKnexService  {
+export class AuthorService  {
 
   static id = "authorsService";
 
+
+  private authorsRepo: IAuthorsRepository = new KnexAuthorsRepository();
+
   async getAll(): Promise<Author[]> {
-    const res = await db("authors").select();
-    return res.map(row => new Author(row.id, row.name, row.surname, row.psudonym));
+    const res = this.authorsRepo.getMultiple();
+    return res;
   }
 
-  async addAuthor(name: string, pseudonym: string, surname: string) {
-    const resp = await db.insert({ name, pseudonym, surname }, "*").into("author") as unknown as {
-      id        : string;
-      name      : string;
-      pseudonym : string;
-      surname   : string;
-    };
-    return new Author(resp.id, resp.name, resp.surname, resp.pseudonym);
+  async getOnSong(songId: string, type: "author" | "textAuthor"): Promise<Author[]> {
+    return await this.authorsRepo.getOnSong(songId, type);
+  }
+
+  async addAuthor(name?: string, pseudonym?: string, surname?: string) {
+
+    const v = (x: unknown) => new Validator()
+      .isDefined()
+      .isNotEmpty()
+      .test(x);
+
+    if (!v(name) || !v(pseudonym) || !v(surname)) {
+      throw new BadRequestError(
+        { message: "At least one of `name`, `pseudonym` and `surname` should be provided and valid" }
+      );
+    }
+
+
+    return this.authorsRepo.addOne({
+      name      : name ?? "",
+      pseudonym : pseudonym ?? "",
+      surname   : surname ?? ""
+    });
   }
 
 }

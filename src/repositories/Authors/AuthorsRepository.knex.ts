@@ -1,6 +1,7 @@
+import { randomUUID } from "crypto";
 import db from "../../core/Database";
 import { Author } from "../../models/Author";
-import { IAuthorsRepository } from "./AuthorsRepository.abstract";
+import { AuthorDO, CreateAuthorDO, IAuthorsRepository } from "./AuthorsRepository.abstract";
 
 export class KnexAuthorsRepository implements IAuthorsRepository {
 
@@ -8,8 +9,9 @@ export class KnexAuthorsRepository implements IAuthorsRepository {
     throw new Error("Method not implemented.");
   }
 
-  getMultiple(): Promise<Author[]> {
-    throw new Error("Method not implemented.");
+  async getMultiple(): Promise<Author[]> {
+    const rows = await db<AuthorDO>("author").select();
+    return rows.map(x => new Author(x.authorId, x.name, x.surname, x.pseudonym));
   }
 
   async getOnSong(songId: string, type: "author" | "textAuthor" = "author"): Promise<Author[]> {
@@ -23,6 +25,23 @@ export class KnexAuthorsRepository implements IAuthorsRepository {
     return response.map(
       (x) => new Author(x.authorId, x.name, x.surname, x.pseudonym)
     );
+  }
+
+  async addOne(data: CreateAuthorDO): Promise<Author> {
+    const uuid = randomUUID();
+
+    const resp = await db<AuthorDO>("author")
+      .insert({ authorId: uuid, name: data.name, pseudonym: data.pseudonym, surname: data.surname })
+      .returning("*");
+
+    return new Author(
+      resp[0].authorId,
+      resp[0].name,
+      resp[0].surname,
+      resp[0].pseudonym
+    );
+
+
   }
 
 }

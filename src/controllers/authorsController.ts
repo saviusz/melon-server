@@ -1,8 +1,9 @@
-import { ExpData, Resource } from "../core/Resource";
+import { Resource } from "../core/Resource";
 import { AsyncResponse, Response } from "../core/Response";
 import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
+import { AuthorService } from "../services/AuthorsService";
 
 export interface CreateAuthorDtO {
   name      : string;
@@ -11,6 +12,12 @@ export interface CreateAuthorDtO {
 }
 
 export class AuthorsController extends Resource {
+
+  private authorsService = new AuthorService();
+
+  async getMultiple(): AsyncResponse<Author[]> {
+    return new Response(await this.authorsService.getAll());
+  }
 
   async create(body: CreateAuthorDtO): AsyncResponse<Author> {
     const exist = new Validator()
@@ -31,7 +38,9 @@ export class AuthorsController extends Resource {
       || surnameErrors.length > 0
     ) throw new BadRequestError({ message: "Missing props" });
 
-    return new Response(new Author("", body.name, body.surname, body.pseudonym));
+    return new Response(
+      await this.authorsService.addAuthor(body.name, body.pseudonym, body.surname)
+    );
   }
 
 }

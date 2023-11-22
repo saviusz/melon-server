@@ -2,7 +2,7 @@ import { Resource } from "../core/Resource";
 import { Response, AsyncResponse } from "../core/Response";
 import { Song, SongMeta } from "../models/Song";
 import { SongService } from "../services/SongsService";
-import { AuthorKnexService } from "../services/AuthorsService";
+import { AuthorService } from "../services/AuthorsService";
 import NotImplementedError from "../core/errors/NotImplementedError";
 import { Validator } from "../core/validator";
 
@@ -15,7 +15,7 @@ export interface CreateSongDtO {
 export class SongsController extends Resource {
 
   songsService = new SongService();
-  authorsService = new AuthorKnexService();
+  authorsService = new AuthorService();
 
   async getMultiple(): AsyncResponse<Array<SongMeta>> {
 
