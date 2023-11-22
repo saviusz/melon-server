@@ -1,19 +1,18 @@
 import { randomUUID } from "crypto";
 import { Song, SongMeta } from "../models/Song";
 import { ContentService } from "./ContentService";
-import { KnexAuthorsRepository } from "../repositories/Authors/AuthorsRepository.knex";
-import { IAuthorsRepository } from "../repositories/Authors/AuthorsRepository.abstract";
 import { ITitlesRepository } from "../repositories/Titles/TitlesRepository.abstract";
 import { KnexTitlesRepository } from "../repositories/Titles/TitlesRepository.knex";
 import NotImplementedError from "../core/errors/NotImplementedError";
+import { AuthorService } from "./AuthorsService";
 
 export class SongService {
 
   static id = "songsService";
 
   private contentService = new ContentService();
-  private authorsRepo : IAuthorsRepository = new KnexAuthorsRepository();
-  private titlesRepo  : ITitlesRepository = new KnexTitlesRepository();
+  private authorsService = new AuthorService();
+  private titlesRepo : ITitlesRepository = new KnexTitlesRepository();
 
   async getIds(): Promise<string[]> {
     return this.titlesRepo.getSongsIds();
@@ -22,9 +21,8 @@ export class SongService {
   async getMeta(id: string): Promise<SongMeta> {
     const titles = await this.titlesRepo.getOnSong(id);
 
-    /* TODO: Wywalić do AuthorsService */
-    const authors = await this.authorsRepo.getOnSong(id, "author");
-    const textAuthors = await this.authorsRepo.getOnSong(id, "textAuthor");
+    const authors = await this.authorsService.getOnSong(id, "author");
+    const textAuthors = await this.authorsService.getOnSong(id, "textAuthor");
 
     return new SongMeta(id, titles, authors, textAuthors);
   }
@@ -35,11 +33,11 @@ export class SongService {
 
 
   async getSong(id: string): Promise<Song> {
+
     const titles = await this.titlesRepo.getOnSong(id);
 
-    /* TODO: Wywalić do AuthorsService */
-    const authors = await this.authorsRepo.getOnSong(id, "author");
-    const textAuthors = await this.authorsRepo.getOnSong(id, "textAuthor");
+    const authors = await this.authorsService.getOnSong(id, "author");
+    const textAuthors = await this.authorsService.getOnSong(id, "textAuthor");
     const version = await this.contentService.getDeafultVersion(id);
 
     return new Song(id, titles, authors, textAuthors, version);

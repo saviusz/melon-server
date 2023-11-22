@@ -1,7 +1,6 @@
 import db from "../../core/Database";
 import NotFoundError from "../../core/errors/NotFoundError";
-import { ContentMetaEntity } from "../../entities/ContentMeta";
-import { IContentMetaRepository } from "./ContentMetaRepository.abstract";
+import { ContentMetaEntity, IContentMetaRepository } from "./ContentMetaRepository.abstract";
 
 export class KnexContentMetaRepository implements IContentMetaRepository {
 
