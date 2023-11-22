@@ -1,4 +1,4 @@
-import { Service } from "../interfaces/Service";
+import { Service } from "./Service";
 
 export class ServiceLocator {
 

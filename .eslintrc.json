@@ -18,8 +18,7 @@
     ],
     "rules": {
         "@stylistic/array-bracket-newline": [
-            "error",
-            {}
+            "error"
         ],
         "@stylistic/array-bracket-spacing": [
             "error",

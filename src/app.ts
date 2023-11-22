@@ -4,7 +4,7 @@ import "express-async-errors";
 import { SongsController } from "./controllers/songsController";
 import { RootController } from "./controllers/rootController";
 import { ServiceLocator } from "./core/ServiceLocator";
-import { SongKnexService } from "./services/SongsService.knex";
+import { SongService } from "./services/SongsService";
 import { errorHandler } from "./middleware/error";
 import { AuthorsController } from "./controllers/authorsController";
 
@@ -30,6 +30,6 @@ app.use("/", new RootController().router);
 app.use(errorHandler);
 
 const locator = new ServiceLocator();
-locator.registerService(SongKnexService.id, new SongKnexService());
+locator.registerService(SongService.id, new SongService());
 
 export default app;

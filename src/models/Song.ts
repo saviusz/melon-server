@@ -1,5 +1,5 @@
 import { Author } from "./Author";
-import { VersionedContent } from "./VersionedContent";
+import { Content } from "./VersionedContent";
 
 export class SongMeta {
 
@@ -19,7 +19,7 @@ export class Song {
     public readonly titles: string[],
     public readonly authors: Author[],
     public readonly textAuthors: Author[],
-    public readonly content: VersionedContent
+    public readonly content: Content
   ) {}
 
 }

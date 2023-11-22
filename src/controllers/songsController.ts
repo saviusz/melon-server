@@ -1,10 +1,8 @@
 import { Resource } from "../core/Resource";
 import { Response, AsyncResponse } from "../core/Response";
 import { Song, SongMeta } from "../models/Song";
-import { SongKnexService } from "../services/SongsService.knex";
-import { AuthorKnexService } from "../services/AuthorsService.knex";
-import { SongService } from "../interfaces/SongsService";
-import NotFoundError from "../core/errors/NotFoundError";
+import { SongService } from "../services/SongsService";
+import { AuthorKnexService } from "../services/AuthorsService";
 import NotImplementedError from "../core/errors/NotImplementedError";
 import { Validator } from "../core/validator";
 
@@ -16,7 +14,7 @@ export interface CreateSongDtO {
 
 export class SongsController extends Resource {
 
-  songsService : SongService = new SongKnexService();
+  songsService = new SongService();
   authorsService = new AuthorKnexService();
 
   async getMultiple(): AsyncResponse<Array<SongMeta>> {
@@ -32,32 +30,21 @@ export class SongsController extends Resource {
 
   async getOne(id: string): AsyncResponse<Song> {
 
-    try {
+    const song = await this.songsService.getSong(id);
+    return new Response(song);
 
-      const song = await this.songsService.getSong(id);
-      return new Response(song);
-
-    } catch (error) {
-
-      console.log(error);
-      throw new NotFoundError();
-
-    }
   }
 
   async create(body: CreateSongDtO): AsyncResponse<unknown> {
 
     const titleErrors = new Validator()
-    .isArray()
-    .isNotEmpty()
-    .getFails(body.titles);
+      .isArray()
+      .isNotEmpty()
+      .getFails(body.titles);
 
-    return new Response(
-      {
-        errors: [],
-        input: body
-      }
-    );
+    if(titleErrors.length > 1) throw new Error("Error");
+
+    this.songsService.createSong({ titles: body.titles, authorIds: [], textAuthorIds: [] });
 
     throw new NotImplementedError();
 

@@ -1,7 +1,7 @@
 import { Part } from "./Parts";
 import { User } from "./User";
 
-export class VersionedContentMeta {
+export class ContentMeta {
 
   constructor(
     public readonly id: string,
@@ -11,7 +11,7 @@ export class VersionedContentMeta {
 
 }
 
-export class VersionedContent {
+export class Content {
 
   constructor(
     public readonly id: string,
