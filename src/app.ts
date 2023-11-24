@@ -3,10 +3,12 @@ import morgan from "morgan";
 import "express-async-errors";
 import { SongsController } from "./controllers/songsController";
 import { RootController } from "./controllers/rootController";
-import { ServiceLocator } from "./core/ServiceLocator";
+import { ServiceContainer } from "./core/ServiceContainer";
 import { SongService } from "./services/SongsService";
 import { errorHandler } from "./middleware/error";
 import { AuthorsController } from "./controllers/authorsController";
+import { ContentService } from "./services/ContentService";
+import { AuthorService } from "./services/AuthorsService";
 
 const app: Application = express();
 
@@ -15,21 +17,25 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 
-app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,PUT,PATCH,POST,DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-  });
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET,PUT,PATCH,POST,DELETE");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
+
+const container = new ServiceContainer();
+container.register(SongService, (cont) => new SongService(cont));
+container.register(AuthorService, (cont) => new AuthorService(cont));
+container.register(ContentService, (cont) => new ContentService(cont));
+
 
 // Routes
-app.use("/authors", new AuthorsController().router);
-app.use("/songs", new SongsController().router);
-app.use("/", new RootController().router);
+app.use("/authors", new AuthorsController(container).router);
+app.use("/songs", new SongsController(container).router);
+app.use("/", new RootController(container).router);
 
 app.use(errorHandler);
-
-const locator = new ServiceLocator();
-locator.registerService(SongService.id, new SongService());
 
 export default app;

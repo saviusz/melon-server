@@ -13,7 +13,9 @@ export interface CreateAuthorDtO {
 
 export class AuthorsController extends Resource {
 
-  private authorsService = new AuthorService();
+  get authorsService() {
+    return this.container.Get<AuthorService>(AuthorService);
+  }
 
   async getMultiple(): AsyncResponse<Author[]> {
     return new Response(await this.authorsService.getAll());

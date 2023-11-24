@@ -14,8 +14,13 @@ export interface CreateSongDtO {
 
 export class SongsController extends Resource {
 
-  songsService = new SongService();
-  authorsService = new AuthorService();
+  get songsService() {
+    return this.container.Get<SongService>(SongService);
+  }
+
+  get authorsService() {
+    return  this.container.Get<AuthorService>(AuthorService);
+  }
 
   async getMultiple(): AsyncResponse<Array<SongMeta>> {
 

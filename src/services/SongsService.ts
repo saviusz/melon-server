@@ -4,15 +4,21 @@ import { ContentService } from "./ContentService";
 import { ITitlesRepository } from "../repositories/Titles/TitlesRepository.abstract";
 import { KnexTitlesRepository } from "../repositories/Titles/TitlesRepository.knex";
 import NotImplementedError from "../core/errors/NotImplementedError";
+import { Service } from "../core/Service";
 import { AuthorService } from "./AuthorsService";
 
-export class SongService {
+export class SongService extends Service {
 
-  static id = "songsService";
+  private titlesRepo: ITitlesRepository = new KnexTitlesRepository();
 
-  private contentService = new ContentService();
-  private authorsService = new AuthorService();
-  private titlesRepo : ITitlesRepository = new KnexTitlesRepository();
+
+  private get contentService() {
+    return this.container.Get<ContentService>(ContentService);
+  }
+
+  private get authorsService() {
+    return this.container.Get<AuthorService>(AuthorService);
+  }
 
   async getIds(): Promise<string[]> {
     return this.titlesRepo.getSongsIds();

@@ -1,13 +1,11 @@
+import { Service } from "../core/Service";
 import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
 import { IAuthorsRepository } from "../repositories/Authors/AuthorsRepository.abstract";
 import { KnexAuthorsRepository } from "../repositories/Authors/AuthorsRepository.knex";
 
-export class AuthorService  {
-
-  static id = "authorsService";
-
+export class AuthorService extends Service {
 
   private authorsRepo: IAuthorsRepository = new KnexAuthorsRepository();
 

@@ -1,3 +1,4 @@
+import { Service } from "../core/Service";
 import { User } from "../models/User";
 import { Content } from "../models/VersionedContent";
 import { IContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.abstract";
@@ -6,7 +7,7 @@ import { IPartsRepository } from "../repositories/Parts/PartsRepository.abstract
 import { FilesystemPartsRepository } from "../repositories/Parts/PartsRepository.filesystem";
 
 
-export class ContentService {
+export class ContentService extends Service {
 
   private partsRepo : IPartsRepository = new FilesystemPartsRepository();
   private metasRepo : IContentMetaRepository = new KnexContentMetaRepository();
