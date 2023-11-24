@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import { CustomError } from "../core/errors/CustomError";
-import { HttpError } from "http-errors";
 
 export const errorHandler = (
   err: Error,
   req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ) => {
   // Handled errors
@@ -35,7 +35,7 @@ export const errorHandler = (
   }
 
   // Unhandled errors
-  console.error(JSON.stringify(err, null, 2));
+  console.error(err);
   return res
     .status(500)
     .send({ errors: [ { message: "Something went wrong" } ] });
