@@ -1,9 +1,3 @@
-<style>
-  center {
-    font-size: 3em;
-  }
-</style>
-
 <p align="center">
   <img src="./docs/assets/logo.svg" width="200" alt="Melon Logo" />
 </p>
