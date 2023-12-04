@@ -1,5 +1,4 @@
 import express, { Application } from "express";
-import morgan from "morgan";
 import "express-async-errors";
 import { SongsController } from "./controllers/songsController";
 import { RootController } from "./controllers/rootController";
@@ -14,7 +13,6 @@ const app: Application = express();
 // Body parsing Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(morgan("dev"));
 app.use(createLogger());
 
 app.use(function (req, res, next) {
