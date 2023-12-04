@@ -1,8 +1,9 @@
 import Knex from "knex";
 import knexfile from "../../knexfile";
 import { up } from "../../migrations/20230911212905_init";
+import { logger } from "./Logger/Logger";
 
-console.log(`env: ${process.env["NODE_ENV"]}`);
+logger.debug(`env: ${process.env["NODE_ENV"]}`);
 const database = Knex(knexfile[(process.env["NODE_ENV"] || "test").trim()]);
 export default database;
 

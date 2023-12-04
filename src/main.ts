@@ -3,7 +3,6 @@ import { logger } from "./core/Logger/Logger";
 
 const port = 3000;
 
-
 logger.debug(`Trying to run in ${process.env["NODE_ENV"]?.trim()} enviroment`);
 try {
   app.listen(port, (): void => {
