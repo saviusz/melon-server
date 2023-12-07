@@ -1,8 +1,6 @@
 import { Resource } from "../core/Resource";
 import { Response, AsyncResponse } from "../core/Response";
 import { Song, SongMeta } from "../models/Song";
-import { SongService } from "../services/SongsService";
-import { AuthorService } from "../services/AuthorsService";
 import NotImplementedError from "../core/errors/NotImplementedError";
 import { Validator } from "../core/validator";
 
@@ -15,11 +13,11 @@ export interface CreateSongDtO {
 export class SongsController extends Resource {
 
   get songsService() {
-    return this.container.Get<SongService>(SongService);
+    return this.services.songService;
   }
 
   get authorsService() {
-    return  this.container.Get<AuthorService>(AuthorService);
+    return this.services.authorService;
   }
 
   async getMultiple(): AsyncResponse<Array<SongMeta>> {

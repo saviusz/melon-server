@@ -25,10 +25,11 @@ app.use(function (req, res, next) {
 });
 
 
-const container = new ServiceContainer();
-container.register(SongService, (cont) => new SongService(cont));
-container.register(AuthorService, (cont) => new AuthorService(cont));
-container.register(ContentService, (cont) => new ContentService(cont));
+const container = new ServiceContainer(
+  new SongService(),
+  new AuthorService(),
+  new ContentService()
+);
 
 
 // Routes

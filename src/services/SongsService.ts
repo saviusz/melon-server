@@ -1,11 +1,9 @@
 import { randomUUID } from "crypto";
 import { Song, SongMeta } from "../models/Song";
-import { ContentService } from "./ContentService";
 import { ITitlesRepository } from "../repositories/Titles/TitlesRepository.abstract";
 import { KnexTitlesRepository } from "../repositories/Titles/TitlesRepository.knex";
 import NotImplementedError from "../core/errors/NotImplementedError";
 import { Service } from "../core/Service";
-import { AuthorService } from "./AuthorsService";
 
 export class SongService extends Service {
 
@@ -13,11 +11,11 @@ export class SongService extends Service {
 
 
   private get contentService() {
-    return this.container.Get<ContentService>(ContentService);
+    return this.services.contentService;
   }
 
   private get authorsService() {
-    return this.container.Get<AuthorService>(AuthorService);
+    return this.services.authorService;
   }
 
   async getIds(): Promise<string[]> {

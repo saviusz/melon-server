@@ -11,10 +11,10 @@ export interface ExpData {
 
 export abstract class Resource {
 
-  protected readonly container;
+  protected readonly services;
   private _router;
   constructor(container: ServiceContainer) {
-    this.container = container;
+    this.services = container;
     this._router = express.Router();
     this._router.get("/", (req, res) =>
       this
