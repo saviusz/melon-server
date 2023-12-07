@@ -3,7 +3,6 @@ import { AsyncResponse, Response } from "../core/Response";
 import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
-import { AuthorService } from "../services/AuthorsService";
 
 export interface CreateAuthorDtO {
   name      : string;
@@ -13,7 +12,9 @@ export interface CreateAuthorDtO {
 
 export class AuthorsController extends Resource {
 
-  private authorsService = new AuthorService();
+  get authorsService() {
+    return this.services.authorService;
+  }
 
   async getMultiple(): AsyncResponse<Author[]> {
     return new Response(await this.authorsService.getAll());

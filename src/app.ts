@@ -2,10 +2,12 @@ import express, { Application } from "express";
 import "express-async-errors";
 import { SongsController } from "./controllers/songsController";
 import { RootController } from "./controllers/rootController";
-import { ServiceLocator } from "./core/ServiceLocator";
+import { ServiceContainer } from "./core/ServiceContainer";
 import { SongService } from "./services/SongsService";
 import { errorHandler } from "./middleware/error";
 import { AuthorsController } from "./controllers/authorsController";
+import { ContentService } from "./services/ContentService";
+import { AuthorService } from "./services/AuthorsService";
 import { createLogger } from "./middleware/logging";
 
 const app: Application = express();
@@ -25,15 +27,19 @@ app.use(function (req, res, next) {
   next();
 });
 
+
+const container = new ServiceContainer(
+  new SongService(),
+  new AuthorService(),
+  new ContentService()
+);
+
+
 // Routes
-app.use("/authors", new AuthorsController().router);
-app.use("/songs", new SongsController().router);
-app.use("/", new RootController().router);
+app.use("/authors", new AuthorsController(container).router);
+app.use("/songs", new SongsController(container).router);
+app.use("/", new RootController(container).router);
 
 app.use(errorHandler);
-
-
-const locator = new ServiceLocator();
-locator.registerService(SongService.id, new SongService());
 
 export default app;
