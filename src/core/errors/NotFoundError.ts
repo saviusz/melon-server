@@ -1,29 +1,15 @@
-import { CustomError } from "./CustomError";
+import { Problem } from "./CustomError";
 
-export default class NotFoundError extends CustomError {
+export default class NotFoundError extends Problem {
 
-  private static readonly _statusCode = 404;
-  private readonly _code    : number;
-  private readonly _context : { [key: string]: unknown };
+  code    : number = 404;
+  type    : string = "about:blank";
+  title   : string = "Not Found";
+  detail? : string;
 
-  constructor(params?: {
-    code?    : number;
-    message? : string;
-    context? : { [key: string]: unknown };
-  }) {
-    const { code, message } = params || {};
-
-    super(message || "Not found");
-    this._code = code || NotFoundError._statusCode;
-    this._context = params?.context || {};
-  }
-
-  get errors() {
-    return [ { message: this.message, context: this._context } ];
-  }
-
-  get statusCode() {
-    return this._code;
+  constructor(detail?: string ) {
+    super();
+    this.detail = detail;
   }
 
 }
