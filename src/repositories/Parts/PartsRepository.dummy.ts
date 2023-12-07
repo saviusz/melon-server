@@ -1,10 +1,11 @@
+import { logger } from "../../core/Logger/Logger";
 import { Line, Part, PartType } from "../../models/Parts";
 import { IPartsRepository } from "./PartsRepository.abstract";
 
 export class DummyPartsRepository implements IPartsRepository {
 
   async getContentByFilename(filename: string): Promise<Part[]> {
-    console.log("WARN: Using dummy source");
+    logger.warn("Using dummy content source");
     return (
       [
         new Part(PartType.Verse, [
