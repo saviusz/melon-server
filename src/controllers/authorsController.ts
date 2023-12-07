@@ -1,6 +1,6 @@
 import { Resource } from "../core/Resource";
 import { AsyncResponse, Response } from "../core/Response";
-import BadRequestError from "../core/errors/BadRequestError";
+import UnprocessableEntityError from "../core/errors/UnprocessableEntityError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
 
@@ -37,7 +37,13 @@ export class AuthorsController extends Resource {
       || nameErrors.length > 0
       || pseudonymErrors.length > 0
       || surnameErrors.length > 0
-    ) throw new BadRequestError({ message: "Missing props" });
+    ) throw new UnprocessableEntityError("Missing Props", [
+      {
+        code    : "Missing one or more",
+        detail  : "Missing one of props: name, pseudonym or surname",
+        pointer : "#/-"
+      }
+    ]);
 
     return new Response(
       await this.authorsService.addAuthor(body.name, body.pseudonym, body.surname)
