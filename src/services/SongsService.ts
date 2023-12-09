@@ -1,14 +1,17 @@
 import { randomUUID } from "crypto";
 import { Song, SongMeta } from "../models/Song";
 import { ITitlesRepository } from "../repositories/Titles/TitlesRepository.abstract";
-import { KnexTitlesRepository } from "../repositories/Titles/TitlesRepository.knex";
 import NotImplementedError from "../core/errors/NotImplementedError";
 import { Service } from "../core/Service";
 
 export class SongService extends Service {
 
-  private titlesRepo: ITitlesRepository = new KnexTitlesRepository();
+  private titlesRepo: ITitlesRepository;
 
+  constructor(titlesRepo: ITitlesRepository) {
+    super();
+    this.titlesRepo = titlesRepo;
+  }
 
   private get contentService() {
     return this.services.contentService;

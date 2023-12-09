@@ -2,15 +2,19 @@ import { Service } from "../core/Service";
 import { User } from "../models/User";
 import { Content } from "../models/VersionedContent";
 import { IContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.abstract";
-import { KnexContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.knex";
 import { IPartsRepository } from "../repositories/Parts/PartsRepository.abstract";
-import { FilesystemPartsRepository } from "../repositories/Parts/PartsRepository.filesystem";
 
 
 export class ContentService extends Service {
 
-  private partsRepo : IPartsRepository = new FilesystemPartsRepository();
-  private metasRepo : IContentMetaRepository = new KnexContentMetaRepository();
+  private partsRepo : IPartsRepository;
+  private metasRepo : IContentMetaRepository;
+
+  constructor(partsRepo: IPartsRepository, metasRepo: IContentMetaRepository) {
+    super();
+    this.partsRepo = partsRepo;
+    this.metasRepo = metasRepo;
+  }
 
   async getDeafultVersion(songId: string) {
 

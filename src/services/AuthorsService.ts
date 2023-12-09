@@ -3,11 +3,15 @@ import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
 import { IAuthorsRepository } from "../repositories/Authors/AuthorsRepository.abstract";
-import { KnexAuthorsRepository } from "../repositories/Authors/AuthorsRepository.knex";
 
 export class AuthorService extends Service {
 
-  private authorsRepo: IAuthorsRepository = new KnexAuthorsRepository();
+  private authorsRepo: IAuthorsRepository;
+
+  constructor(authorsRepo: IAuthorsRepository) {
+    super();
+    this.authorsRepo = authorsRepo;
+  }
 
   async getAll(): Promise<Author[]> {
     const res = this.authorsRepo.getMultiple();
@@ -25,18 +29,22 @@ export class AuthorService extends Service {
       .isNotEmpty()
       .test(x);
 
-    if (!v(name) || !v(pseudonym) || !v(surname)) {
+    if (!v(name) && !v(pseudonym) && !v(surname)) {
       throw new BadRequestError(
-        { message: "At least one of `name`, `pseudonym` and `surname` should be provided and valid" }
+        "At least one of `name`, `pseudonym` and `surname` should be provided and valid"
       );
     }
 
 
     return this.authorsRepo.addOne({
-      name      : name ?? "",
-      pseudonym : pseudonym ?? "",
-      surname   : surname ?? ""
+      name      : name,
+      pseudonym : pseudonym,
+      surname   : surname
     });
+  }
+
+  getOne(id: string) {
+    return this.authorsRepo.getOneById(id);
   }
 
 }

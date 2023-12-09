@@ -1,9 +1,13 @@
+import { DummyAuthorsRepository } from "../repositories/Authors/AuthorsRepository.dummy";
+import { DummyContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.dummy";
+import { DummyPartsRepository } from "../repositories/Parts/PartsRepository.dummy";
+import { DummyTitlesRepository } from "../repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../services/AuthorsService";
 import { ContentService } from "../services/ContentService";
 import { SongService } from "../services/SongsService";
 
 
-export class ServiceContainer {
+export default class ServiceContainer {
 
   constructor(
     readonly songService    : SongService,
@@ -16,3 +20,9 @@ export class ServiceContainer {
   }
 
 }
+
+export const testingContainer = new ServiceContainer(
+  new SongService(new DummyTitlesRepository()),
+  new AuthorService(new DummyAuthorsRepository()),
+  new ContentService(new DummyPartsRepository(), new DummyContentMetaRepository())
+);

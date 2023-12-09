@@ -2,7 +2,7 @@ import express, { Request, Response as ExpResponse } from "express";
 import { AsyncResponse } from "./Response";
 import NotImplementedError from "./errors/NotImplementedError";
 import NotFoundError from "./errors/NotFoundError";
-import { ServiceContainer } from "./ServiceContainer";
+import ServiceContainer from "./ServiceContainer";
 
 export interface ExpData {
   req : Request;
@@ -11,7 +11,7 @@ export interface ExpData {
 
 export abstract class Resource {
 
-  protected readonly services;
+  protected readonly services : ServiceContainer;
   private _router;
   constructor(container: ServiceContainer) {
     this.services = container;
