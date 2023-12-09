@@ -9,6 +9,7 @@ import { ContentService } from "../../src/services/ContentService";
 import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { Author } from "../../src/models/Author";
+import { Response } from "../../src/core/Response";
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
@@ -75,29 +76,48 @@ describe("Authors data", () => {
   });
 
   describe("POST: /authors", () => {
-    it.each(validAuthors)(
-      "on Author($name, $pseudonym, $surname) should create and return same correct author",
+    describe.each(validAuthors)(
+      "on Author($name, $pseudonym, $surname)",
       async (author) => {
         // Arrange
         const controller = new AuthorsController(emptyContainer());
+        let response: Response<Author> | undefined;
 
-        // Act
-        const response = await controller.create({
-          name      : author.name,
-          pseudonym : author.pseudonym,
-          surname   : author.surname
-        });
+        it("should return Author($name, $pseudonym, $surname)", async () => {
 
-        // Assert
-        expect(response.body).toHaveProperty("id");
-        expect(response.body).toMatchObject(
-          {
-            id        : expect.any(String),
+          // Act
+          response = await controller.create({
             name      : author.name,
             pseudonym : author.pseudonym,
             surname   : author.surname
-          }
-        );
+          });
+
+          // Assert
+          expect(response.body).toMatchObject(
+            {
+              id        : expect.any(String),
+              name      : author.name,
+              pseudonym : author.pseudonym,
+              surname   : author.surname
+            }
+          );
+        });
+
+        it("should be preserved", async () => {
+
+          // Act
+          const readResponse = await controller.getOne(response.body.id);
+
+          // Assert
+          expect(readResponse.body).toMatchObject(
+            {
+              id        : expect.any(String),
+              name      : author.name,
+              pseudonym : author.pseudonym,
+              surname   : author.surname
+            }
+          );
+        });
       }
     );
 
@@ -130,3 +150,4 @@ describe("Authors data", () => {
     it.todo("on existing author should throw");
   });
 });
+

@@ -4,7 +4,9 @@ import { CreateAuthorDO, IAuthorsRepository } from "./AuthorsRepository.abstract
 export class DummyAuthorsRepository implements IAuthorsRepository {
 
   constructor(
-    private _authors: Author[] = []
+    private _authors: Author[] = [],
+    private _authorsOnSong: { songId: string; author: Author }[] = [],
+    private _textAuthorsOnSong: { songId: string; author: Author }[] = []
   ) {}
 
   async getOneById(id: string): Promise<Author> {
@@ -17,8 +19,14 @@ export class DummyAuthorsRepository implements IAuthorsRepository {
     return this._authors;
   }
 
-  getOnSong(songId: string, type: "author" | "textAuthor"): Promise<Author[]> {
-    throw new Error("Method not implemented.");
+  async getOnSong(songId: string, type: "author" | "textAuthor"): Promise<Author[]> {
+    if(type == "author") return this._authorsOnSong
+      .filter(x => x.songId == songId)
+      .map(x => x.author);
+    else if(type == "textAuthor") return this._textAuthorsOnSong
+      .filter(x => x.songId == songId)
+      .map(x => x.author);
+    throw new Error("Unreachable");
   }
 
   async addOne(data: CreateAuthorDO): Promise<Author> {
