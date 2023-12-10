@@ -10,7 +10,22 @@ import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/C
 import { SongsController } from "../../src/controllers/songsController";
 import { Author } from "../../src/models/Author";
 import { Response } from "../../src/core/Response";
-import { Song, SongMeta } from "../../src/models/Song";
+import { SongMeta } from "../../src/models/Song";
+import { KnexTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.knex";
+import { ITitlesRepository } from "../../src/repositories/Titles/TitlesRepository.abstract";
+import Knex from "knex";
+import knexfile from "../../knexfile";
+
+describe.todo.each([
+  { name: "Knex", repo: new KnexTitlesRepository(Knex(knexfile["test"])) },
+  { name: "Dummy", repo: new DummyTitlesRepository() }
+])("$name Titles Repo", ({ repo }: { repo: ITitlesRepository }) => {
+  describe("when adding with valid data", () => {
+
+    // TODO: Add this test
+
+  });
+});
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),

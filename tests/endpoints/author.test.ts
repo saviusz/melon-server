@@ -10,6 +10,43 @@ import { DummyPartsRepository } from "../../src/repositories/Parts/PartsReposito
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { Author } from "../../src/models/Author";
 import { Response } from "../../src/core/Response";
+import { KnexAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.knex";
+import Knex from "knex";
+import knexfile from "../../knexfile";
+import { IAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.abstract";
+
+describe.each([
+  { name: "Knex", repo: new KnexAuthorsRepository(Knex(knexfile["test"])) },
+  { name: "Dummy", repo: new DummyAuthorsRepository() }
+])("$name Authors Repo", ({ repo }: { repo: IAuthorsRepository }) => {
+  describe("when adding with valid data", () => {
+    let valid: Author;
+    it("should create", async () => {
+      valid = await repo.addOne({
+        name      : "Imie",
+        pseudonym : "Pseudonym",
+        surname   : "Nazwisko"
+      });
+    });
+
+    it("should be readeble", async () => {
+      // Act
+      const response = await repo.getOneById(valid.id);
+
+      // Assert
+      expect(response).toBe(valid);
+    });
+
+    it("should be displayed in all authors", async () => {
+      // Act
+      const response = await repo.getMultiple();
+
+      // Assert
+      expect(response).toContainEqual(valid);
+    });
+
+  });
+});
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
