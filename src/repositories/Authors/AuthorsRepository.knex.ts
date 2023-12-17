@@ -2,14 +2,12 @@ import { randomUUID } from "crypto";
 import { Author } from "../../models/Author";
 import { AuthorDO, CreateAuthorDO, IAuthorsRepository } from "./AuthorsRepository.abstract";
 import { Knex } from "knex";
-import { up } from "../../../migrations/20230911212905_init";
 
 export class KnexAuthorsRepository implements IAuthorsRepository {
 
   constructor(
     private database: Knex
   ) {
-    up(this.database);
   }
 
   getOneById(): Promise<Author> {
