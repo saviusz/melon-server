@@ -14,9 +14,13 @@ import { KnexAuthorsRepository } from "../../src/repositories/Authors/AuthorsRep
 import Knex from "knex";
 import knexfile from "../../knexfile";
 import { IAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.abstract";
+import { up } from "../../migrations/20230911212905_init";
+
+const database = Knex(knexfile["test"]);
+up(database);
 
 describe.each([
-  { name: "Knex", repo: new KnexAuthorsRepository(Knex(knexfile["test"])) },
+  { name: "Knex", repo: new KnexAuthorsRepository(database) },
   { name: "Dummy", repo: new DummyAuthorsRepository() }
 ])("$name Authors Repo", ({ repo }: { repo: IAuthorsRepository }) => {
   describe("when adding with valid data", () => {

@@ -1,11 +1,17 @@
-import db from "../../core/Database";
+import { Knex } from "knex";
 import NotFoundError from "../../core/errors/NotFoundError";
 import { ContentMetaEntity, IContentMetaRepository } from "./ContentMetaRepository.abstract";
 
 export class KnexContentMetaRepository implements IContentMetaRepository {
 
+  constructor(
+    private database : Knex
+  ) {
+  }
+
+
   async getOneBySongId(songId: string): Promise<ContentMetaEntity> {
-    const response = await db("versionedContentOnSong")
+    const response = await this.database("versionedContentOnSong")
       .where({ songId: songId })
       .first();
 

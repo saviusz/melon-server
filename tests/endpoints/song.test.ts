@@ -15,9 +15,13 @@ import { KnexTitlesRepository } from "../../src/repositories/Titles/TitlesReposi
 import { ITitlesRepository } from "../../src/repositories/Titles/TitlesRepository.abstract";
 import Knex from "knex";
 import knexfile from "../../knexfile";
+import { up } from "../../migrations/20230911212905_init";
+
+const database = Knex(knexfile["test"]);
+up(database);
 
 describe.todo.each([
-  { name: "Knex", repo: new KnexTitlesRepository(Knex(knexfile["test"])) },
+  { name: "Knex", repo: new KnexTitlesRepository(Knex(database)) },
   { name: "Dummy", repo: new DummyTitlesRepository() }
 ])("$name Titles Repo", ({ repo }: { repo: ITitlesRepository }) => {
   describe("when adding with valid data", () => {
