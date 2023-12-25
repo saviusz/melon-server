@@ -1,7 +1,7 @@
 import App from "./app";
 import { logger } from "./core/Logger/Logger";
 import ServiceContainer from "./core/ServiceContainer";
-import { KnexAuthorsRepository } from "./repositories/Authors/AuthorsRepository.knex";
+import { KnexArtistsRepository } from "./repositories/Artists/ArtistsRepository.knex";
 import { KnexContentMetaRepository } from "./repositories/ContentMeta/ContentMetaRepository.knex";
 import { FilesystemPartsRepository } from "./repositories/Parts/PartsRepository.filesystem";
 import { KnexTitlesRepository } from "./repositories/Titles/TitlesRepository.knex";
@@ -17,7 +17,7 @@ const database = Knex(knexfile[(process.env["NODE_ENV"] || "test").trim()]);
 
 const container = new ServiceContainer(
   new SongService(new KnexTitlesRepository(database)),
-  new AuthorService(new KnexAuthorsRepository(database)),
+  new AuthorService(new KnexArtistsRepository(database)),
   new ContentService(new FilesystemPartsRepository(), new KnexContentMetaRepository(database))
 );
 
