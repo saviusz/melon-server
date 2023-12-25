@@ -4,29 +4,29 @@ import ServiceContainer from "../../src/core/ServiceContainer";
 import { SongService } from "../../src/services/SongsService";
 import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../../src/services/AuthorsService";
-import { DummyAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.dummy";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
 import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { Author } from "../../src/models/Author";
 import { Response } from "../../src/core/Response";
-import { KnexAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.knex";
+import { KnexArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.knex";
 import Knex from "knex";
 import knexfile from "../../knexfile";
-import { IAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.abstract";
+import { ArtistDO, IArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.abstract";
 import { up } from "../../migrations/20230911212905_init";
 
 const database = Knex(knexfile["test"]);
 up(database);
 
 describe.each([
-  { name: "Knex", repo: new KnexAuthorsRepository(database) },
-  { name: "Dummy", repo: new DummyAuthorsRepository() }
-])("$name Authors Repo", ({ repo }: { repo: IAuthorsRepository }) => {
+  { name: "Knex", repo: new KnexArtistsRepository(database) },
+  { name: "Dummy", repo: new DummyArtistsRepository() }
+])("$name Authors Repo", ({ repo }: { repo: IArtistsRepository }) => {
   describe("when adding with valid data", () => {
-    let valid: Author;
+    let valid: ArtistDO;
     it("should create", async () => {
-      valid = await repo.addOne({
+      valid = await repo.create({
         name      : "Imie",
         pseudonym : "Pseudonym",
         surname   : "Nazwisko"
@@ -35,7 +35,7 @@ describe.each([
 
     it("should be readeble", async () => {
       // Act
-      const response = await repo.getOneById(valid.id);
+      const response = await repo.getOneById(valid.artistId);
 
       // Assert
       expect(response).toBe(valid);
@@ -54,7 +54,7 @@ describe.each([
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository()),
+  new AuthorService(new DummyArtistsRepository()),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
@@ -69,7 +69,7 @@ const validAuthors = [
 
 const filledContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository(validAuthors)),
+  new AuthorService(new DummyArtistsRepository(validAuthors)),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
@@ -128,9 +128,9 @@ describe("Authors data", () => {
 
           // Act
           response = await controller.create({
-            name      : author.name,
-            pseudonym : author.pseudonym,
-            surname   : author.surname
+            name      : author.name ?? "",
+            pseudonym : author.pseudonym ?? "",
+            surname   : author.surname ?? ""
           });
 
           // Assert

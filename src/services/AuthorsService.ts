@@ -2,13 +2,13 @@ import { Service } from "../core/Service";
 import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
-import { IAuthorsRepository } from "../repositories/Authors/AuthorsRepository.abstract";
+import { IArtistsRepository } from "../repositories/Artists/ArtistsRepository.abstract";
 
 export class AuthorService extends Service {
 
-  private authorsRepo: IAuthorsRepository;
+  private authorsRepo: IArtistsRepository;
 
-  constructor(authorsRepo: IAuthorsRepository) {
+  constructor(authorsRepo: IArtistsRepository) {
     super();
     this.authorsRepo = authorsRepo;
   }

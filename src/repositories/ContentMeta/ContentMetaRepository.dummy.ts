@@ -2,7 +2,7 @@ import { ContentMetaEntity, IContentMetaRepository } from "./ContentMetaReposito
 
 export class DummyContentMetaRepository implements IContentMetaRepository {
 
-  getOneBySongId(songId: string): Promise<ContentMetaEntity> {
+  getOneBySongId(): Promise<ContentMetaEntity> {
     throw new Error("Method not implemented.");
   }
 

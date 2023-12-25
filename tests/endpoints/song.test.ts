@@ -3,7 +3,7 @@ import ServiceContainer from "../../src/core/ServiceContainer";
 import { SongService } from "../../src/services/SongsService";
 import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../../src/services/AuthorsService";
-import { DummyAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.dummy";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
 import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
@@ -33,7 +33,7 @@ describe.todo.each([
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository()),
+  new AuthorService(new DummyArtistsRepository()),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
@@ -66,7 +66,7 @@ const generatedTitles = generateTitles();
 
 const filledContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository(generatedTitles)),
-  new AuthorService(new DummyAuthorsRepository(validAuthors)),
+  new AuthorService(new DummyArtistsRepository(validAuthors)),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
