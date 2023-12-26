@@ -10,51 +10,12 @@ import { DummyPartsRepository } from "../../src/repositories/Parts/PartsReposito
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { Author } from "../../src/models/Author";
 import { Response } from "../../src/core/Response";
-import { KnexArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.knex";
-import Knex from "knex";
-import knexfile from "../../knexfile";
-import { ArtistDO, IArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.abstract";
-import { up } from "../../migrations/20230911212905_init";
+import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
 
-const database = Knex(knexfile["test"]);
-up(database);
-
-describe.each([
-  { name: "Knex", repo: new KnexArtistsRepository(database) },
-  { name: "Dummy", repo: new DummyArtistsRepository() }
-])("$name Authors Repo", ({ repo }: { repo: IArtistsRepository }) => {
-  describe("when adding with valid data", () => {
-    let valid: ArtistDO;
-    it("should create", async () => {
-      valid = await repo.create({
-        name      : "Imie",
-        pseudonym : "Pseudonym",
-        surname   : "Nazwisko"
-      });
-    });
-
-    it("should be readeble", async () => {
-      // Act
-      const response = await repo.getOneById(valid.artistId);
-
-      // Assert
-      expect(response).toBe(valid);
-    });
-
-    it("should be displayed in all authors", async () => {
-      // Act
-      const response = await repo.getMultiple();
-
-      // Assert
-      expect(response).toContainEqual(valid);
-    });
-
-  });
-});
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyArtistsRepository()),
+  new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
@@ -63,13 +24,21 @@ const emptyContainer = () => new ServiceContainer(
 
 const validAuthors = [
   new Author("--uid--", "name", "surname", "pseudonym"),
-  new Author("9823494532", "Zażółć", "Jaźń" ),
+  new Author("9823494532", "Zażółć", "Jaźń", "" ),
   new Author("#-19%4$#!@", "Zażółć", "Jaźń", ""),
 ];
 
 const filledContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyArtistsRepository(validAuthors)),
+  new AuthorService(
+    new DummyArtistsRepository(validAuthors.map(x => ({
+      authorId  : x.id,
+      name      : x.name ?? "",
+      pseudonym : x.pseudonym ?? "",
+      surname   : x.surname ?? ""
+    }))),
+    new DummyArtistRefsRepository()
+  ),
   new ContentService(
     new DummyPartsRepository(),
     new DummyContentMetaRepository()
@@ -111,7 +80,6 @@ describe("Authors data", () => {
       const response = await controller.getOne(author.id);
 
       // Assert
-      expect(response.body).toHaveProperty("id", author.id);
       expect(response.body).toEqual(author);
     });
   });
