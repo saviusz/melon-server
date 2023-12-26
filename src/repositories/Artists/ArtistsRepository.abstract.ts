@@ -1,6 +1,6 @@
 /** Artist datasource object */
 export interface ArtistDO {
-  artistId  : string;
+  authorId  : string;
   name      : string;
   pseudonym : string;
   surname   : string;
@@ -26,5 +26,7 @@ export interface IArtistsRepository {
   getOneById(id: string) : Promise<ArtistDO>;
 
   /** Returns list of all artists in database */
-  getMultiple(): Promise<Array<ArtistDO>>;
+  getMultiple(params?: {
+    ids?: string[];
+  }): Promise<Array<ArtistDO>>;
 }

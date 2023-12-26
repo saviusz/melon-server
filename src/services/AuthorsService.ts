@@ -2,24 +2,48 @@ import { Service } from "../core/Service";
 import BadRequestError from "../core/errors/BadRequestError";
 import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
+import { IArtistRefsRepository } from "../repositories/ArtistRefs/ArtistRefsRepository.abstract";
 import { IArtistsRepository } from "../repositories/Artists/ArtistsRepository.abstract";
 
 export class AuthorService extends Service {
 
-  private authorsRepo: IArtistsRepository;
+  private artistsRepo : IArtistsRepository;
+  private refsRepo    : IArtistRefsRepository;
 
-  constructor(authorsRepo: IArtistsRepository) {
+  constructor(artistRepo: IArtistsRepository, artistRefsRepo: IArtistRefsRepository) {
     super();
-    this.authorsRepo = authorsRepo;
+    this.artistsRepo = artistRepo;
+    this.refsRepo = artistRefsRepo;
   }
 
+  /**
+   * Get all authors in system
+   * @returns All authors
+   */
   async getAll(): Promise<Author[]> {
-    const res = this.authorsRepo.getMultiple();
-    return res;
+    const res = await this.artistsRepo.getMultiple();
+    return res.map(x => new Author(x.authorId, x.name, x.surname, x.pseudonym));
+  }
+
+  async getMultipleByIds(ids: string[]): Promise<Author[]> {
+    const res = await this.artistsRepo.getMultiple({ ids });
+    return res.map(x => new Author(x.authorId, x.name, x.surname, x.pseudonym));
   }
 
   async getOnSong(songId: string, type: "author" | "textAuthor"): Promise<Author[]> {
-    return await this.authorsRepo.getOnSong(songId, type);
+    let ids;
+
+    switch (type) {
+      case "textAuthor":
+        ids = await this.refsRepo.getAuthorsOnSong(songId);
+        break;
+      default:
+      case "author":
+        ids = await this.refsRepo.getPerformersOnSong(songId);
+        break;
+    }
+
+    return this.getMultipleByIds(ids);
   }
 
   async addAuthor(name?: string, pseudonym?: string, surname?: string) {
@@ -36,15 +60,18 @@ export class AuthorService extends Service {
     }
 
 
-    return this.authorsRepo.addOne({
+    const res = await this.artistsRepo.create({
       name      : name,
       pseudonym : pseudonym,
       surname   : surname
     });
+
+    return new Author(res.authorId, res.name, res.surname, res.pseudonym);
   }
 
-  getOne(id: string) {
-    return this.authorsRepo.getOneById(id);
+  async getOne(id: string) : Promise<Author> {
+    const res = await this.artistsRepo.getOneById(id);
+    return new Author(res.authorId, res.name, res.surname, res.pseudonym);
   }
 
 }

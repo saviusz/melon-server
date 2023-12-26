@@ -1,3 +1,4 @@
+import { DummyArtistRefsRepository } from "../repositories/ArtistRefs/ArtistRefsRepository.dummy";
 import { DummyArtistsRepository } from "../repositories/Artists/ArtistsRepository.dummy";
 import { DummyContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.dummy";
 import { DummyPartsRepository } from "../repositories/Parts/PartsRepository.dummy";
@@ -23,6 +24,6 @@ export default class ServiceContainer {
 
 export const testingContainer = new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyArtistsRepository()),
+  new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
   new ContentService(new DummyPartsRepository(), new DummyContentMetaRepository())
 );
