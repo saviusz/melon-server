@@ -1,3 +1,5 @@
+
+/** Repository representing realation between Artist and Song */
 export interface IArtistRefsRepository {
 
   /**
