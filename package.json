@@ -29,7 +29,8 @@
   },
   "scripts": {
     "start:dev": "set NODE_ENV=development & ts-node-dev ./src/main.ts",
-    "test": "vitest --run"
+    "test": "vitest --run",
+    "test:dev": "vitest"
   },
   "author": "",
   "license": "ISC"
