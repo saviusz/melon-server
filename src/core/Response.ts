@@ -19,9 +19,17 @@ export class Response<T> {
     this._body = body;
   }
 
-  status(status: Status) {
+  setStatus(status: Status) {
     this._status = status;
     return this;
+  }
+
+  get body() {
+    return this._body;
+  }
+
+  get status() {
+    return this._status;
   }
 
   toExpress(res: ExpResponse) {
