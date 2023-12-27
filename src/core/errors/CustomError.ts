@@ -1,19 +1,23 @@
-export enum ErrorType {
-  NotFound = 404,
-}
+import ShortUniqueId from "short-unique-id";
 
-export type CustomErrorContent = {
-  message  : string;
-  context? : { [key: string]: unknown };
-};
+const idGen = new ShortUniqueId({ length: 7 });
+export abstract class Problem {
 
-export abstract class CustomError extends Error {
+  abstract readonly code: number;
+  abstract readonly type : string;
+  abstract readonly title: string;
+  abstract readonly detail?: string;
+  extensions        : object = {};
+  readonly instance : string = idGen.randomUUID();
 
-  abstract readonly statusCode: number;
-  abstract readonly errors: CustomErrorContent[];
-
-  constructor(message: string) {
-    super(message);
+  getFormatted() {
+    return {
+      type     : this.type,
+      title    : this.title,
+      detail   : this.detail,
+      instance : this.instance,
+      ...this.extensions
+    };
   }
 
 }

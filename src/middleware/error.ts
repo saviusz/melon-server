@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { CustomError } from "../core/errors/CustomError";
+import { Problem } from "../core/errors/CustomError";
 import { logger } from "../core/Logger/Logger";
 
 export const errorHandler = (
@@ -10,9 +10,10 @@ export const errorHandler = (
   next: NextFunction
 ) => {
   // Handled errors
-  if (err instanceof CustomError) {
-    const { statusCode, errors } = err;
-    return res.status(statusCode).send({ errors });
+  if (err instanceof Problem) {
+    return res
+      .status(err.code)
+      .send(err.getFormatted());
   }
 
   // @ts-expect-error Non typed error
@@ -26,5 +27,14 @@ export const errorHandler = (
   logger.error(err);
   return res
     .status(500)
-    .send({ errors: [ { message: "Something went wrong" } ] });
+    .send({
+      type     : "about:blank",
+      title    : "Internal server error",
+      detail   : "Encountered unknown error",
+      instance : "",
+      error    : {
+        name    : err.name,
+        message : err.message,
+      }
+    });
 };

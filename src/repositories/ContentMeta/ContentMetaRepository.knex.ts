@@ -9,7 +9,7 @@ export class KnexContentMetaRepository implements IContentMetaRepository {
       .where({ songId: songId })
       .first();
 
-    if (!response) throw new NotFoundError({ message: "There is no content with this songId" });
+    if (!response) throw new NotFoundError("There is no content with this songId" );
 
     return {
       id       : response["contentId"],

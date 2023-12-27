@@ -1,18 +1,22 @@
 import { randomUUID } from "crypto";
 import { Song, SongMeta } from "../models/Song";
-import { ContentService } from "./ContentService";
 import { ITitlesRepository } from "../repositories/Titles/TitlesRepository.abstract";
 import { KnexTitlesRepository } from "../repositories/Titles/TitlesRepository.knex";
 import NotImplementedError from "../core/errors/NotImplementedError";
-import { AuthorService } from "./AuthorsService";
+import { Service } from "../core/Service";
 
-export class SongService {
+export class SongService extends Service {
 
-  static id = "songsService";
+  private titlesRepo: ITitlesRepository = new KnexTitlesRepository();
 
-  private contentService = new ContentService();
-  private authorsService = new AuthorService();
-  private titlesRepo : ITitlesRepository = new KnexTitlesRepository();
+
+  private get contentService() {
+    return this.services.contentService;
+  }
+
+  private get authorsService() {
+    return this.services.authorService;
+  }
 
   async getIds(): Promise<string[]> {
     return this.titlesRepo.getSongsIds();
