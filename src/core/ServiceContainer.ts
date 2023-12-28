@@ -1,6 +1,6 @@
 import { DummyArtistRefsRepository } from "../repositories/ArtistRefs/ArtistRefsRepository.dummy";
 import { DummyArtistsRepository } from "../repositories/Artists/ArtistsRepository.dummy";
-import { DummyContentDataRepository } from "../repositories/ContentData/PartsRepository.dummy";
+import { DummyContentDataRepository } from "../repositories/ContentData/ContentDataRepository.dummy";
 import { DummyContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.dummy";
 import { DummyTitlesRepository } from "../repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../services/AuthorsService";

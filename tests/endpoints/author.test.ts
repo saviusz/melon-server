@@ -1,16 +1,17 @@
 import { describe, expect, it } from "vitest";
+
 import { AuthorsController } from "../../src/controllers/authorsController";
+import { Response } from "../../src/core/Response";
 import ServiceContainer from "../../src/core/ServiceContainer";
-import { SongService } from "../../src/services/SongsService";
+import { Author } from "../../src/models/Author";
+import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
+import { DummyContentDataRepository } from "../../src/repositories/ContentData/ContentDataRepository.dummy";
+import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../../src/services/AuthorsService";
-import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
-import { DummyContentDataRepository } from "../../src/repositories/ContentData/PartsRepository.dummy";
-import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
-import { Author } from "../../src/models/Author";
-import { Response } from "../../src/core/Response";
-import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
+import { SongService } from "../../src/services/SongsService";
 
 
 const emptyContainer = () => new ServiceContainer(
