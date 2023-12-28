@@ -14,7 +14,8 @@
     },
     "plugins": [
         "@typescript-eslint",
-        "@stylistic"
+        "@stylistic",
+        "perfectionist"
     ],
     "rules": {
         "@stylistic/array-bracket-newline": [
@@ -210,6 +211,45 @@
         "@stylistic/template-tag-spacing": "error",
         "@stylistic/wrap-regex": "error",
         "@stylistic/yield-star-spacing": "error",
-        "@stylistic/member-delimiter-style": "error"
+        "@stylistic/member-delimiter-style": "error",
+        "perfectionist/sort-classes": [
+            "error", {
+            "type": "natural", 
+            "groups": [
+                "index-signature",
+                "static-property",
+                "private-property",
+                "property",
+                "constructor",
+                "static-method",
+                "private-method",
+                "static-private-method",
+                "method",
+                ["get-method", "set-method"],
+                "unknown"
+            ]
+            }
+        ],
+        "perfectionist/sort-imports": [
+            "error",
+            {
+              "type": "natural",
+              "groups": [
+                "style",
+                "type",
+                ["builtin", "external"],
+                "internal-type",
+                "internal",
+                ["parent-type", "sibling-type", "index-type"],
+                ["parent", "sibling", "index"],
+                "object",
+                "unknown"
+              ],
+              "newlines-between": "always",
+              "internal-pattern": [
+                "@/components/src/**"
+              ]
+            }
+          ]
     }
 }
