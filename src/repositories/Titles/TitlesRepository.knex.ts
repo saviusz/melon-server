@@ -21,9 +21,9 @@ export class KnexTitlesRepository implements ITitlesRepository {
   }
 
   async add(songId:string, title: string): Promise<string> {
-    await this.database("titleOnSong")
+    const resp = await this.database("titleOnSong")
       .insert({ songId: songId, title: title }, "title");
-    return "";
+    return resp[0]["title"];
   }
 
   async addMany(songId: string, titles: string[]): Promise<string[]> {
