@@ -29,24 +29,15 @@ export function getPartType(value: string) {
 }
 
 
-export class Part {
-
-  constructor(
-    public readonly type: PartType,
-    public readonly lines: Line[],
-    public readonly name?: string
-  ) {
-  }
-
+export interface Part {
+  type  : PartType;
+  lines : Line[];
+  name? : string;
 }
 
-export class Line {
-
-  constructor(
-    public readonly text: string,
-    public readonly chords: Chord[]
-  ) {}
-
+export interface Line {
+  text   : string;
+  chords : Chord[];
 }
 
 export enum CoreNote {
@@ -60,11 +51,7 @@ export enum CoreNote {
   g = "g",
 }
 
-export class Chord {
-
-  constructor(
-    public readonly coreNote: CoreNote,
-    public readonly isMinor: boolean
-  ) {}
-
+export interface Chord {
+  coreNote : CoreNote;
+  isMinor  : boolean;
 }

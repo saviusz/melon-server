@@ -1,5 +1,5 @@
 import { Author } from "./Author";
-import { Content } from "./VersionedContent";
+import { Content } from "./Content";
 
 export class SongMeta {
 

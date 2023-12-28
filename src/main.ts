@@ -3,7 +3,7 @@ import { logger } from "./core/Logger/Logger";
 import ServiceContainer from "./core/ServiceContainer";
 import { KnexArtistsRepository } from "./repositories/Artists/ArtistsRepository.knex";
 import { KnexContentMetaRepository } from "./repositories/ContentMeta/ContentMetaRepository.knex";
-import { FilesystemPartsRepository } from "./repositories/Parts/PartsRepository.filesystem";
+import { FilesystemPartsRepository } from "./repositories/ContentData/PartsRepository.filesystem";
 import { KnexTitlesRepository } from "./repositories/Titles/TitlesRepository.knex";
 import { AuthorService } from "./services/AuthorsService";
 import { ContentService } from "./services/ContentService";

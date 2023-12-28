@@ -6,7 +6,7 @@ import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepos
 import { AuthorService } from "../../src/services/AuthorsService";
 import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
-import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
+import { DummyContentDataRepository } from "../../src/repositories/ContentData/PartsRepository.dummy";
 import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { Author } from "../../src/models/Author";
 import { Response } from "../../src/core/Response";
@@ -17,7 +17,7 @@ const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
   new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );
@@ -40,7 +40,7 @@ const filledContainer = () => new ServiceContainer(
     new DummyArtistRefsRepository()
   ),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );

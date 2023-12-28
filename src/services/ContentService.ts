@@ -1,16 +1,16 @@
 import { Service } from "../core/Service";
 import { User } from "../models/User";
-import { Content } from "../models/VersionedContent";
+import { Content } from "../models/Content";
 import { IContentMetaRepository } from "../repositories/ContentMeta/ContentMetaRepository.abstract";
-import { IPartsRepository } from "../repositories/Parts/PartsRepository.abstract";
+import { IContentDataRepository } from "../repositories/ContentData/ContentDataRepository.abstract";
 
 
 export class ContentService extends Service {
 
-  private partsRepo : IPartsRepository;
+  private partsRepo : IContentDataRepository;
   private metasRepo : IContentMetaRepository;
 
-  constructor(partsRepo: IPartsRepository, metasRepo: IContentMetaRepository) {
+  constructor(partsRepo: IContentDataRepository, metasRepo: IContentMetaRepository) {
     super();
     this.partsRepo = partsRepo;
     this.metasRepo = metasRepo;
@@ -19,7 +19,7 @@ export class ContentService extends Service {
   async getDeafultVersion(songId: string) {
 
     const meta = await this.metasRepo.getOneBySongId(songId);
-    const parts = await this.partsRepo.getContentByFilename(meta.filename);
+    const parts = await this.partsRepo.readContent(meta.filename);
 
     return new Content(
       meta.id,
