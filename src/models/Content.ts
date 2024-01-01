@@ -1,4 +1,4 @@
-import { Part } from "./Parts";
+import { ContentData } from "../repositories/ContentData/ContentDataRepository.abstract";
 import { User } from "./User";
 
 export class ContentMeta {
@@ -17,7 +17,7 @@ export class Content {
     public readonly id: string,
     public readonly name: string,
     public readonly author: User,
-    public readonly parts: Part[]
+    public readonly data: ContentData
   ) {}
 
 }

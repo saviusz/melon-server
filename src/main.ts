@@ -1,20 +1,25 @@
 import App from "./app";
 import { logger } from "./core/Logger/Logger";
 import ServiceContainer from "./core/ServiceContainer";
-import { KnexAuthorsRepository } from "./repositories/Authors/AuthorsRepository.knex";
+import { KnexArtistsRepository } from "./repositories/Artists/ArtistsRepository.knex";
 import { KnexContentMetaRepository } from "./repositories/ContentMeta/ContentMetaRepository.knex";
-import { FilesystemPartsRepository } from "./repositories/Parts/PartsRepository.filesystem";
+import { FilesystemPartsRepository } from "./repositories/ContentData/PartsRepository.filesystem";
 import { KnexTitlesRepository } from "./repositories/Titles/TitlesRepository.knex";
 import { AuthorService } from "./services/AuthorsService";
 import { ContentService } from "./services/ContentService";
 import { SongService } from "./services/SongsService";
+import Knex from "knex";
+import knexfile from "../knexfile";
+import { KnexArtistRefsRepository } from "./repositories/ArtistRefs/ArtistRefsRepository.knex";
 
 const port = 3000;
 
+const database = Knex(knexfile[(process.env["NODE_ENV"] || "test").trim()]);
+
 const container = new ServiceContainer(
-  new SongService(new KnexTitlesRepository()),
-  new AuthorService(new KnexAuthorsRepository()),
-  new ContentService(new FilesystemPartsRepository(), new KnexContentMetaRepository())
+  new SongService(new KnexTitlesRepository(database)),
+  new AuthorService(new KnexArtistsRepository(database), new KnexArtistRefsRepository(database)),
+  new ContentService(new FilesystemPartsRepository(), new KnexContentMetaRepository(database))
 );
 
 const app = new App(container);

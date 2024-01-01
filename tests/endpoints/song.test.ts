@@ -1,37 +1,24 @@
 import { describe, expect, it, test } from "vitest";
+
+import { SongsController } from "../../src/controllers/songsController";
+import { Response } from "../../src/core/Response";
 import ServiceContainer from "../../src/core/ServiceContainer";
-import { SongService } from "../../src/services/SongsService";
+import { Author } from "../../src/models/Author";
+import { SongMeta } from "../../src/models/Song";
+import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
+import { DummyContentDataRepository } from "../../src/repositories/ContentData/ContentDataRepository.dummy";
+import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../../src/services/AuthorsService";
-import { DummyAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
-import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
-import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
-import { SongsController } from "../../src/controllers/songsController";
-import { Author } from "../../src/models/Author";
-import { Response } from "../../src/core/Response";
-import { SongMeta } from "../../src/models/Song";
-import { KnexTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.knex";
-import { ITitlesRepository } from "../../src/repositories/Titles/TitlesRepository.abstract";
-import Knex from "knex";
-import knexfile from "../../knexfile";
-
-describe.todo.each([
-  { name: "Knex", repo: new KnexTitlesRepository(Knex(knexfile["test"])) },
-  { name: "Dummy", repo: new DummyTitlesRepository() }
-])("$name Titles Repo", ({ repo }: { repo: ITitlesRepository }) => {
-  describe("when adding with valid data", () => {
-
-    // TODO: Add this test
-
-  });
-});
+import { SongService } from "../../src/services/SongsService";
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository()),
+  new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );
@@ -62,9 +49,14 @@ const generatedTitles = generateTitles();
 
 const filledContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository(generatedTitles)),
-  new AuthorService(new DummyAuthorsRepository(validAuthors)),
+  new AuthorService(new DummyArtistsRepository(validAuthors.map(x => ({
+    authorId  : x.id,
+    name      : x.name ?? "",
+    pseudonym : x.pseudonym ?? "",
+    surname   : x.surname ?? ""
+  }))), new DummyArtistRefsRepository()),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );

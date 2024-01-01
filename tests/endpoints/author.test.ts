@@ -1,73 +1,47 @@
 import { describe, expect, it } from "vitest";
+
 import { AuthorsController } from "../../src/controllers/authorsController";
+import { Response } from "../../src/core/Response";
 import ServiceContainer from "../../src/core/ServiceContainer";
-import { SongService } from "../../src/services/SongsService";
+import { Author } from "../../src/models/Author";
+import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
+import { DummyContentDataRepository } from "../../src/repositories/ContentData/ContentDataRepository.dummy";
+import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
 import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
 import { AuthorService } from "../../src/services/AuthorsService";
-import { DummyAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.dummy";
 import { ContentService } from "../../src/services/ContentService";
-import { DummyPartsRepository } from "../../src/repositories/Parts/PartsRepository.dummy";
-import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
-import { Author } from "../../src/models/Author";
-import { Response } from "../../src/core/Response";
-import { KnexAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.knex";
-import Knex from "knex";
-import knexfile from "../../knexfile";
-import { IAuthorsRepository } from "../../src/repositories/Authors/AuthorsRepository.abstract";
+import { SongService } from "../../src/services/SongsService";
 
-describe.each([
-  { name: "Knex", repo: new KnexAuthorsRepository(Knex(knexfile["test"])) },
-  { name: "Dummy", repo: new DummyAuthorsRepository() }
-])("$name Authors Repo", ({ repo }: { repo: IAuthorsRepository }) => {
-  describe("when adding with valid data", () => {
-    let valid: Author;
-    it("should create", async () => {
-      valid = await repo.addOne({
-        name      : "Imie",
-        pseudonym : "Pseudonym",
-        surname   : "Nazwisko"
-      });
-    });
-
-    it("should be readeble", async () => {
-      // Act
-      const response = await repo.getOneById(valid.id);
-
-      // Assert
-      expect(response).toBe(valid);
-    });
-
-    it("should be displayed in all authors", async () => {
-      // Act
-      const response = await repo.getMultiple();
-
-      // Assert
-      expect(response).toContainEqual(valid);
-    });
-
-  });
-});
 
 const emptyContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository()),
+  new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );
 
 const validAuthors = [
   new Author("--uid--", "name", "surname", "pseudonym"),
-  new Author("9823494532", "Zażółć", "Jaźń" ),
+  new Author("9823494532", "Zażółć", "Jaźń", "" ),
   new Author("#-19%4$#!@", "Zażółć", "Jaźń", ""),
 ];
 
 const filledContainer = () => new ServiceContainer(
   new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyAuthorsRepository(validAuthors)),
+  new AuthorService(
+    new DummyArtistsRepository(validAuthors.map(x => ({
+      authorId  : x.id,
+      name      : x.name ?? "",
+      pseudonym : x.pseudonym ?? "",
+      surname   : x.surname ?? ""
+    }))),
+    new DummyArtistRefsRepository()
+  ),
   new ContentService(
-    new DummyPartsRepository(),
+    new DummyContentDataRepository(),
     new DummyContentMetaRepository()
   )
 );
@@ -107,7 +81,6 @@ describe("Authors data", () => {
       const response = await controller.getOne(author.id);
 
       // Assert
-      expect(response.body).toHaveProperty("id", author.id);
       expect(response.body).toEqual(author);
     });
   });
@@ -124,9 +97,9 @@ describe("Authors data", () => {
 
           // Act
           response = await controller.create({
-            name      : author.name,
-            pseudonym : author.pseudonym,
-            surname   : author.surname
+            name      : author.name ?? "",
+            pseudonym : author.pseudonym ?? "",
+            surname   : author.surname ?? ""
           });
 
           // Assert
