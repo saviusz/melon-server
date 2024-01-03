@@ -26,10 +26,10 @@ jobs:
 
         steps:
           - uses: actions/checkout@v4
-          - name: Use Node latest
+          - name: Use Node lts
             uses: actions/setup-node@v4
             with:
-              node-version: lts
+              node-version: lts/*
           - name: Install
             run: npm ci
           - name: Lint
@@ -40,10 +40,10 @@ jobs:
 
       steps:
         - uses: actions/checkout@v4
-        - name: Use Node latest
+        - name: Use Node lts
           uses: actions/setup-node@v4
           with:
-            node-version: lts
+            node-version: lts/*
         - name: Install
           run: npm ci
         - name: Lint
