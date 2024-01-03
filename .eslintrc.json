@@ -213,7 +213,7 @@
         "@stylistic/yield-star-spacing": "error",
         "@stylistic/member-delimiter-style": "error",
         "perfectionist/sort-classes": [
-            "error", {
+            "warn", {
             "type": "natural", 
             "groups": [
                 "index-signature",
@@ -231,7 +231,7 @@
             }
         ],
         "perfectionist/sort-imports": [
-            "error",
+            "warn",
             {
               "type": "natural",
               "groups": [

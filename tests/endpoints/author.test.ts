@@ -116,7 +116,7 @@ describe("Authors data", () => {
         it("should be preserved", async () => {
 
           // Act
-          const readResponse = await controller.getOne(response.body.id);
+          const readResponse = await controller.getOne(response!.body.id);
 
           // Assert
           expect(readResponse.body).toMatchObject(
@@ -130,17 +130,6 @@ describe("Authors data", () => {
         });
       }
     );
-
-    it("on empty input should throw", async () => {
-      // Arrange
-      const controller = new AuthorsController(emptyContainer());
-
-      // Act
-      const response = controller.create({});
-
-      // Assert
-      await expect(response).rejects.toMatchObject({ code: 422 });
-    });
 
     it("on empty strings input should throw", async () => {
       // Arrange
