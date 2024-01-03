@@ -31,7 +31,9 @@
   "scripts": {
     "start:dev": "set NODE_ENV=development & ts-node-dev ./src/main.ts",
     "test": "vitest --run",
-    "test:dev": "vitest"
+    "test:dev": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint ."
   },
   "author": "",
   "license": "ISC"
