@@ -2,49 +2,20 @@ import { describe, expect, it } from "vitest";
 
 import { AuthorsController } from "../../src/controllers/authorsController";
 import { Response } from "../../src/core/Response";
-import ServiceContainer from "../../src/core/ServiceContainer";
 import { Author } from "../../src/models/Author";
-import { DummyArtistRefsRepository } from "../../src/repositories/ArtistRefs/ArtistRefsRepository.dummy";
-import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
-import { DummyContentDataRepository } from "../../src/repositories/ContentData/ContentDataRepository.dummy";
-import { DummyContentMetaRepository } from "../../src/repositories/ContentMeta/ContentMetaRepository.dummy";
-import { DummyTitlesRepository } from "../../src/repositories/Titles/TitlesRepository.dummy";
-import { AuthorService } from "../../src/services/AuthorsService";
-import { ContentService } from "../../src/services/ContentService";
-import { SongService } from "../../src/services/SongsService";
-
-
-const emptyContainer = () => new ServiceContainer(
-  new SongService(new DummyTitlesRepository()),
-  new AuthorService(new DummyArtistsRepository(), new DummyArtistRefsRepository()),
-  new ContentService(
-    new DummyContentDataRepository(),
-    new DummyContentMetaRepository()
-  )
-);
+import { filledArtistsRepo } from "../stubs/artists";
+import { emptyContainer, partialContainer } from "../stubs/serviceContainer";
 
 const validAuthors = [
   new Author("--uid--", "name", "surname", "pseudonym"),
-  new Author("9823494532", "Zażółć", "Jaźń", "" ),
+  new Author("9823494532", "Zażółć", "Jaźń", ""),
   new Author("#-19%4$#!@", "Zażółć", "Jaźń", ""),
 ];
 
-const filledContainer = () => new ServiceContainer(
-  new SongService(new DummyTitlesRepository()),
-  new AuthorService(
-    new DummyArtistsRepository(validAuthors.map(x => ({
-      authorId  : x.id,
-      name      : x.name ?? "",
-      pseudonym : x.pseudonym ?? "",
-      surname   : x.surname ?? ""
-    }))),
-    new DummyArtistRefsRepository()
-  ),
-  new ContentService(
-    new DummyContentDataRepository(),
-    new DummyContentMetaRepository()
-  )
-);
+const filledContainer = () =>
+  partialContainer({
+    artistRepo: filledArtistsRepo(),
+  });
 
 describe("Authors data", () => {
   describe("GET: /authors", () => {
@@ -73,16 +44,19 @@ describe("Authors data", () => {
   });
 
   describe("GET: /authors/:id", () => {
-    it.each(validAuthors)("on $id should return author with $id id", async (author) => {
-      // Arrange
-      const controller = new AuthorsController(filledContainer());
+    it.each(validAuthors)(
+      "on $id should return author with $id id",
+      async (author) => {
+        // Arrange
+        const controller = new AuthorsController(filledContainer());
 
-      // Act
-      const response = await controller.getOne(author.id);
+        // Act
+        const response = await controller.getOne(author.id);
 
-      // Assert
-      expect(response.body).toEqual(author);
-    });
+        // Assert
+        expect(response.body).toEqual(author);
+      }
+    );
   });
 
   describe("POST: /authors", () => {
@@ -94,39 +68,33 @@ describe("Authors data", () => {
         let response: Response<Author> | undefined;
 
         it("should return Author($name, $pseudonym, $surname)", async () => {
-
           // Act
           response = await controller.create({
-            name      : author.name ?? "",
-            pseudonym : author.pseudonym ?? "",
-            surname   : author.surname ?? ""
+            name: author.name ?? "",
+            pseudonym: author.pseudonym ?? "",
+            surname: author.surname ?? "",
           });
 
           // Assert
-          expect(response.body).toMatchObject(
-            {
-              id        : expect.any(String),
-              name      : author.name,
-              pseudonym : author.pseudonym,
-              surname   : author.surname
-            }
-          );
+          expect(response.body).toMatchObject({
+            id: expect.any(String),
+            name: author.name,
+            pseudonym: author.pseudonym,
+            surname: author.surname,
+          });
         });
 
         it("should be preserved", async () => {
-
           // Act
           const readResponse = await controller.getOne(response!.body.id);
 
           // Assert
-          expect(readResponse.body).toMatchObject(
-            {
-              id        : expect.any(String),
-              name      : author.name,
-              pseudonym : author.pseudonym,
-              surname   : author.surname
-            }
-          );
+          expect(readResponse.body).toMatchObject({
+            id: expect.any(String),
+            name: author.name,
+            pseudonym: author.pseudonym,
+            surname: author.surname,
+          });
         });
       }
     );
@@ -137,9 +105,9 @@ describe("Authors data", () => {
 
       // Act
       const response = controller.create({
-        name      : "",
-        surname   : "",
-        pseudonym : ""
+        name: "",
+        surname: "",
+        pseudonym: "",
       });
 
       // Assert
@@ -149,4 +117,3 @@ describe("Authors data", () => {
     it.todo("on existing author should throw");
   });
 });
-

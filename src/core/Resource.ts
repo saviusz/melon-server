@@ -5,31 +5,32 @@ import NotFoundError from "./errors/NotFoundError";
 import ServiceContainer from "./ServiceContainer";
 
 export interface ExpData {
-  req : Request;
-  res : ExpResponse;
+  req: Request;
+  res: ExpResponse;
 }
 
 export abstract class Resource {
-
-  protected readonly services : ServiceContainer;
+  private container: ServiceContainer;
   private _router;
+
+  get services() {
+    return this.container.services;
+  }
+
   constructor(container: ServiceContainer) {
-    this.services = container;
+    this.container = container;
     this._router = express.Router();
     this._router.get("/", (req, res) =>
-      this
-        .getMultiple({ req, res })
-        .then((x) => x.toExpress(res)));
+      this.getMultiple({ req, res }).then((x) => x.toExpress(res))
+    );
 
     this._router.get("/:id", (req, res) =>
-      this
-        .getOne(req.params.id, { req, res })
-        .then((x) => x.toExpress(res)));
+      this.getOne(req.params.id, { req, res }).then((x) => x.toExpress(res))
+    );
 
     this._router.post("/", (req, res) =>
-      this
-        .create(req.body, { req, res })
-        .then((x) => x.toExpress(res)));
+      this.create(req.body, { req, res }).then((x) => x.toExpress(res))
+    );
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -54,5 +55,4 @@ export abstract class Resource {
   get router() {
     return this._router;
   }
-
 }

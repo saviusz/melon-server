@@ -17,11 +17,17 @@ const port = 3000;
 
 const database = Knex(knexfile[(process.env["NODE_ENV"] || "test").trim()]);
 
-const container = new ServiceContainer(
-  new SongService(new KnexTitlesRepository(database)),
-  new AuthorService(new KnexArtistsRepository(database), new KnexArtistRefsRepository(database)),
-  new ContentService(new FilesystemContentDataRepository("./data/songs"), new KnexContentMetaRepository(database))
-);
+const container = new ServiceContainer({
+  songService: new SongService(new KnexTitlesRepository(database)),
+  authorService: new AuthorService(
+    new KnexArtistsRepository(database),
+    new KnexArtistRefsRepository(database)
+  ),
+  contentService: new ContentService(
+    new FilesystemContentDataRepository("./data/songs"),
+    new KnexContentMetaRepository(database)
+  ),
+});
 
 const app = new App(container);
 
