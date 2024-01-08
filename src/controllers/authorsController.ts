@@ -5,27 +5,19 @@ import { Validator } from "../core/validator";
 import { Author } from "../models/Author";
 
 export interface CreateAuthorDtO {
-  name      : string;
-  pseudonym : string;
-  surname   : string;
+  name      : string | undefined;
+  pseudonym : string | undefined;
+  surname   : string | undefined;
 }
 
 export class AuthorsController extends Resource {
 
-  get authorsService() {
-    return this.services.authorService;
-  }
-
-  async getMultiple(): AsyncResponse<Author[]> {
-    return new Response(await this.authorsService.getAll());
-  }
-
   async create(body: CreateAuthorDtO): AsyncResponse<Author> {
-    const exist = new Validator()
-      .isDefined();
-    const atLeastOne = exist.test(body.name)
-    || exist.test(body.pseudonym)
-    || exist.test(body.surname);
+    const exist = new Validator().isDefined();
+    const atLeastOne
+      = exist.test(body.name)
+      || exist.test(body.pseudonym)
+      || exist.test(body.surname);
     const nameErrors = new Validator().isString()
       .getFails(body.name);
     const pseudonymErrors = new Validator().isString()
@@ -33,7 +25,8 @@ export class AuthorsController extends Resource {
     const surnameErrors = new Validator().isString()
       .getFails(body.surname);
 
-    if (!atLeastOne
+    if (
+      !atLeastOne
       || nameErrors.length > 0
       || pseudonymErrors.length > 0
       || surnameErrors.length > 0
@@ -41,13 +34,25 @@ export class AuthorsController extends Resource {
       {
         code    : "Missing one or more",
         detail  : "Missing one of props: name, pseudonym or surname",
-        pointer : "#/-"
-      }
+        pointer : "#/-",
+      },
     ]);
 
     return new Response(
-      await this.authorsService.addAuthor(body.name, body.pseudonym, body.surname)
+      await this.authorsService.addAuthor(
+        body.name,
+        body.pseudonym,
+        body.surname
+      )
     );
+  }
+
+  async getMultiple(): AsyncResponse<Author[]> {
+    return new Response(await this.authorsService.getAll());
+  }
+
+  get authorsService() {
+    return this.services.authorService;
   }
 
 }
