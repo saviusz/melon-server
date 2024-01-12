@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 
 import { AuthorsController } from "../../src/controllers/authorsController";
-import { Response } from "../../src/core/Response";
-import { Author } from "../../src/models/Author";
+import { DummyArtistsRepository } from "../../src/repositories/Artists/ArtistsRepository.dummy";
 import { filledArtistsRepo, validArtists } from "../stubs/artists";
 import { emptyContainer, partialContainer } from "../stubs/serviceContainer";
 
@@ -66,43 +65,31 @@ describe("Authors data", () => {
   });
 
   describe("POST: /authors", () => {
-    describe.each(validArtists)(
-      "on Author($name, $pseudonym, $surname)",
+    it.each(validArtists)(
+      "should create Author($name, $pseudonym, $surname)",
       async (author) => {
+
         // Arrange
-        const controller = new AuthorsController(emptyContainer());
-        let response: Response<Author> | undefined;
+        const artistRepo = new DummyArtistsRepository();
+        const controller = new AuthorsController(partialContainer({ artistRepo: artistRepo }));
+        const artist = {
+          name      : author.name ?? "",
+          pseudonym : author.pseudonym ?? "",
+          surname   : author.surname ?? "",
+        };
 
-        it("should return Author($name, $pseudonym, $surname)", async () => {
-          // Act
-          response = await controller.create({
-            name      : author.name ?? "",
-            pseudonym : author.pseudonym ?? "",
-            surname   : author.surname ?? "",
-          });
+        // Act
+        const response = await controller.create(artist);
 
-          // Assert
-          expect(response.body).toMatchObject({
-            id        : expect.any(String),
-            name      : author.name,
-            pseudonym : author.pseudonym,
-            surname   : author.surname,
-          });
-          expect(response.status).toBe(201);
+        // Assert
+        expect(response.body).toMatchObject({
+          id        : expect.any(String),
+          name      : author.name,
+          pseudonym : author.pseudonym,
+          surname   : author.surname,
         });
-
-        it("should be preserved", async () => {
-          // Act
-          const readResponse = await controller.getOne(response!.body.id);
-
-          // Assert
-          expect(readResponse.body).toMatchObject({
-            id        : expect.any(String),
-            name      : author.name,
-            pseudonym : author.pseudonym,
-            surname   : author.surname,
-          });
-        });
+        expect(response.status).toBe(201);
+        expect(await artistRepo.getOneById(response.body.id)).toMatchObject(artist);
       }
     );
 
@@ -129,9 +116,9 @@ describe("Authors data", () => {
 
         // Act
         const response = controller.create({
-          name      : artist.name,
-          surname   : artist.surname,
-          pseudonym : artist.pseudonym,
+          name      : artist.name ?? undefined,
+          surname   : artist.surname ?? undefined,
+          pseudonym : artist.pseudonym ?? undefined,
         });
 
         // Assert

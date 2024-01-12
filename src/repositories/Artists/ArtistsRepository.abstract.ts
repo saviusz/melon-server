@@ -8,6 +8,7 @@ export interface ArtistDO {
 
 /** Artist creational datasource object */
 export type CreateArtistDO = Omit<Partial<ArtistDO>, "authorId">;
+export type FindArtistDO = Partial<ArtistDO>;
 
 export interface IArtistsRepository {
 
@@ -26,4 +27,6 @@ export interface IArtistsRepository {
 
   /** Returns list of all artists in database */
   getMultiple(params?: { ids?: string[] }): Promise<Array<ArtistDO>>;
+
+  find(params: FindArtistDO): Promise<Array<ArtistDO>>;
 }
