@@ -1,8 +1,9 @@
 import express, { Request, Response as ExpResponse } from "express";
+
 import { AsyncResponse } from "./Response";
-import NotImplementedError from "./errors/NotImplementedError";
-import NotFoundError from "./errors/NotFoundError";
 import ServiceContainer from "./ServiceContainer";
+import NotFoundError from "./errors/NotFoundError";
+import NotImplementedError from "./errors/NotImplementedError";
 
 export interface ExpData {
   req : Request;
@@ -11,8 +12,8 @@ export interface ExpData {
 
 export abstract class Resource {
 
-  protected readonly services : ServiceContainer;
   private _router;
+  protected readonly services : ServiceContainer;
   constructor(container: ServiceContainer) {
     this.services = container;
     this._router = express.Router();
@@ -33,6 +34,15 @@ export abstract class Resource {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async create(body: unknown, opt?: ExpData): AsyncResponse<unknown> {
+    throw new NotImplementedError();
+  }
+
+  async delete(): AsyncResponse<unknown> {
+    throw new NotImplementedError();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getMultiple(opt?: ExpData): AsyncResponse<unknown> {
     throw new NotFoundError();
   }
@@ -40,15 +50,6 @@ export abstract class Resource {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async getOne(id: string, opt?: ExpData): AsyncResponse<unknown> {
     throw new NotFoundError();
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async create(body: unknown, opt?: ExpData): AsyncResponse<unknown> {
-    throw new NotImplementedError();
-  }
-
-  async delete(): AsyncResponse<unknown> {
-    throw new NotImplementedError();
   }
 
   get router() {
