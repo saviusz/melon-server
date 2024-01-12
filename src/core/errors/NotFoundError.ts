@@ -3,9 +3,9 @@ import { Problem } from "./CustomError";
 export default class NotFoundError extends Problem {
 
   code    : number = 404;
-  type    : string = "about:blank";
-  title   : string = "Not Found";
   detail? : string;
+  title   : string = "Not Found";
+  type    : string = "about:blank";
 
   constructor(detail?: string ) {
     super();

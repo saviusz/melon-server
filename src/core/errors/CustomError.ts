@@ -3,10 +3,6 @@ import ShortUniqueId from "short-unique-id";
 const idGen = new ShortUniqueId({ length: 7 });
 export abstract class Problem {
 
-  abstract readonly code: number;
-  abstract readonly type : string;
-  abstract readonly title: string;
-  abstract readonly detail?: string;
   extensions        : object = {};
   readonly instance : string = idGen.randomUUID();
 
@@ -19,5 +15,10 @@ export abstract class Problem {
       ...this.extensions
     };
   }
+
+  abstract readonly code: number;
+  abstract readonly detail?: string;
+  abstract readonly title: string;
+  abstract readonly type : string;
 
 }
