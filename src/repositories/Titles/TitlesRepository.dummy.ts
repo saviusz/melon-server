@@ -4,11 +4,12 @@ import { ITitlesRepository } from "./TitlesRepository.abstract";
 export class DummyTitlesRepository implements ITitlesRepository {
 
   constructor(
-    private _titles: { id: string; title: string }[] = []
+    private _titles: { [key: string]: string[] } = {}
   ) {}
 
   async add(songId: string, title: string): Promise<string> {
-    this._titles.push({ id: songId, title });
+    const titles = this._titles[songId] ?? [];
+    this._titles[songId] = [ ...titles, title ];
     return title;
   }
 
@@ -17,12 +18,12 @@ export class DummyTitlesRepository implements ITitlesRepository {
     return titles;
   }
 
-  async getSongsIds(): Promise<string[]> {
-    return [ ...new Set(this._titles.map(x => x.id)) ];
+  async getOnSong(songId: string): Promise<string[]> {
+    return this._titles[songId] ?? [];
   }
 
-  async getOnSong(songId: string): Promise<string[]> {
-    return this._titles.filter(x => x.id == songId).map(x => x.title);
+  async getSongsIds(): Promise<string[]> {
+    return Object.keys(this._titles);
   }
 
 }

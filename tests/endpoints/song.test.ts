@@ -3,36 +3,14 @@ import { describe, expect, it, test } from "vitest";
 import { SongsController } from "../../src/controllers/songsController";
 import { Response } from "../../src/core/Response";
 import { Author } from "../../src/models/Author";
-import { SongMeta } from "../../src/models/Song";
-import { emptyContainer, partialContainer } from "../stubs/serviceContainer";
 import { filledArtistsRepo } from "../stubs/artists";
+import { emptyContainer } from "../stubs/serviceContainer";
+import { partialSongMetaContiner, validSongMetas } from "../stubs/songMetaContainer";
 
-const validSongMetas = [
-  new SongMeta("id", ["Tytuł", "1948"], [], []),
-  new SongMeta("694202137", ["lagiewnik", "1 kadrowa"], [], []),
-];
-
-const validIds = ["id", "694202137"];
-const validAuthors = [
-  new Author("--uid--", "name", "surname", "pseudonym"),
-  new Author("9823494532", "Zażółć", "Jaźń"),
-  new Author("#-19%4$#!@", "Zażółć", "Jaźń", ""),
-];
-
-function generateTitles() {
-  const array = [];
-  for (const meta of validSongMetas) {
-    for (const title of meta.titles) array.push({ id: meta.songId, title });
-  }
-  return array;
-}
-
-const generatedTitles = generateTitles();
+const validIds = [ "id", "694202137" ];
 
 const filledContainer = () =>
-  partialContainer({
-    artistRepo: filledArtistsRepo(),
-  });
+  partialSongMetaContiner({ artistRepo: filledArtistsRepo() });
 
 describe("Song data", () => {
   describe("GET: /songs", () => {
@@ -55,7 +33,7 @@ describe("Song data", () => {
       const response = await controller.getMultiple();
 
       // Assert
-      expect(response.body).toMatchObject(validSongMetas);
+      expect(response.body).toMatchObject(validSongMetas());
     });
   });
 
@@ -88,23 +66,23 @@ describe("Song data", () => {
   describe("POST: /songs", () => {
     describe("with valid input", async () => {
       // Arrange
-      const titles = ["Tytuł", "lagiewnik", "1 kadrowa", "1948"];
+      const titles = [ "Tytuł", "lagiewnik", "1 kadrowa", "1948" ];
       const controller = new SongsController(filledContainer());
       let response: Response<unknown> | undefined;
       it("should return added song", async () => {
         // Act
         response = await controller.create({
-          titles: titles,
-          authorIds: [],
-          textAuthorIds: [],
+          titles        : titles,
+          authorIds     : [],
+          textAuthorIds : [],
         });
 
         // Assert
         expect(response.body).toMatchObject({
-          id: expect.any(String),
-          titles: titles,
-          authors: [],
-          textAuthors: [],
+          id          : expect.any(String),
+          titles      : titles,
+          authors     : [],
+          textAuthors : [],
         });
       });
 
@@ -127,9 +105,9 @@ describe("Song data", () => {
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
@@ -143,9 +121,9 @@ describe("Song data", () => {
 
       // Act
       const response = controller.create({
-        titles: titles ?? [],
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles ?? [],
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
@@ -154,14 +132,14 @@ describe("Song data", () => {
 
     test("with only empty strings provided should throw", async () => {
       // Arrange
-      const titles: string[] = ["", ""];
+      const titles: string[] = [ "", "" ];
       const controller = new SongsController(filledContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
@@ -170,14 +148,14 @@ describe("Song data", () => {
 
     test("with invalid author id", async () => {
       // Arrange
-      const titles: string[] = ["testowa"];
+      const titles: string[] = [ "testowa" ];
       const controller = new SongsController(filledContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: ["#inva-lid"],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : [ "#inva-lid" ],
+        textAuthorIds : [],
       });
 
       // Assert
@@ -186,14 +164,14 @@ describe("Song data", () => {
 
     test("with invalid text author id", async () => {
       // Arrange
-      const titles: string[] = ["testowa"];
+      const titles: string[] = [ "testowa" ];
       const controller = new SongsController(filledContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: ["#inva-lid"],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : [ "#inva-lid" ],
       });
 
       // Assert
