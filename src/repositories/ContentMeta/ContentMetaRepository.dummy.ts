@@ -2,8 +2,8 @@ import { ContentMetaEntity, IContentMetaRepository } from "./ContentMetaReposito
 
 export class DummyContentMetaRepository implements IContentMetaRepository {
 
-  getOneBySongId(): Promise<ContentMetaEntity> {
-    throw new Error("Method not implemented.");
+  async getOneBySongId(songId: string): Promise<ContentMetaEntity> {
+    return { id: "Random ID", songId: songId, authorId: "-----uuid1-----", filename: "name", name: "elo" };
   }
 
 }

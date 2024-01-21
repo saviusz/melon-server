@@ -1,38 +1,13 @@
 import { describe, expect, it, test } from "vitest";
 
 import { SongsController } from "../../src/controllers/songsController";
-import { Response } from "../../src/core/Response";
-import { Author } from "../../src/models/Author";
-import { SongMeta } from "../../src/models/Song";
-import { emptyContainer, partialContainer } from "../stubs/serviceContainer";
-import { filledArtistsRepo } from "../stubs/artists";
-
-const validSongMetas = [
-  new SongMeta("id", ["Tytuł", "1948"], [], []),
-  new SongMeta("694202137", ["lagiewnik", "1 kadrowa"], [], []),
-];
-
-const validIds = ["id", "694202137"];
-const validAuthors = [
-  new Author("--uid--", "name", "surname", "pseudonym"),
-  new Author("9823494532", "Zażółć", "Jaźń"),
-  new Author("#-19%4$#!@", "Zażółć", "Jaźń", ""),
-];
-
-function generateTitles() {
-  const array = [];
-  for (const meta of validSongMetas) {
-    for (const title of meta.titles) array.push({ id: meta.songId, title });
-  }
-  return array;
-}
-
-const generatedTitles = generateTitles();
+import { filledArtistsRepo, validArtists } from "../stubs/artists";
+import { emptyContainer } from "../stubs/serviceContainer";
+import { partialSongMetaContiner, validSongMetas } from "../stubs/songMetaContainer";
+import { validTitles } from "../stubs/titles";
 
 const filledContainer = () =>
-  partialContainer({
-    artistRepo: filledArtistsRepo(),
-  });
+  partialSongMetaContiner({ artistRepo: filledArtistsRepo() });
 
 describe("Song data", () => {
   describe("GET: /songs", () => {
@@ -55,30 +30,33 @@ describe("Song data", () => {
       const response = await controller.getMultiple();
 
       // Assert
-      expect(response.body).toMatchObject(validSongMetas);
+      expect(response.body).toMatchObject(validSongMetas());
     });
   });
 
   describe("GET: /song/:id", () => {
-    test.each(validIds)(
-      "with existing id '%s' should return song",
-      async (id) => {
+
+    it.each(validSongMetas())(
+      "with existing id $songId should return song",
+      async (meta) => {
         // Arrange
         const controller = new SongsController(filledContainer());
 
         // Act
-        const response = await controller.getOne(id);
+        const response = await controller.getOne(meta.songId);
 
         // Assert
-        expect(response.body).toMatchObject({ id: id });
+        expect(response.body).toMatchObject({ id: meta.songId, authors: meta.authors, textAuthors: meta.textAuthors, titles: meta.titles });
       }
     );
-    test("with unknown id should throw", () => {
+
+
+    it.each(validSongMetas())("with unknown id $songId should throw", (meta) => {
       // Arrange
-      const controller = new SongsController(filledContainer());
+      const controller = new SongsController(emptyContainer());
 
       // Act
-      const response = controller.getOne(" ");
+      const response = controller.getOne(meta.songId);
 
       // Assert
       expect(response).rejects.toMatchObject({ code: 404 });
@@ -86,40 +64,36 @@ describe("Song data", () => {
   });
 
   describe("POST: /songs", () => {
-    describe("with valid input", async () => {
-      // Arrange
-      const titles = ["Tytuł", "lagiewnik", "1 kadrowa", "1948"];
-      const controller = new SongsController(filledContainer());
-      let response: Response<unknown> | undefined;
-      it("should return added song", async () => {
-        // Act
-        response = await controller.create({
-          titles: titles,
-          authorIds: [],
-          textAuthorIds: [],
-        });
 
-        // Assert
-        expect(response.body).toMatchObject({
-          id: expect.any(String),
-          titles: titles,
-          authors: [],
-          textAuthors: [],
-        });
+    it.each(validSongMetas())("should create Song(titles: $titles)", async (meta) => {
+
+      // Arrange
+      const controller = new SongsController(filledContainer());
+
+      // Act
+      const response = await controller.create({
+        titles        : meta.titles,
+        authorIds     : meta.authors.map(artist => artist.id),
+        textAuthorIds : meta.textAuthors.map(artist => artist.id)
       });
 
-      it.skipIf(response == undefined)("should be preserved", async () => {
-        // Act
-        // const readResponse = await controller.getOne(response.body.songId);
-        // Assert
-        /* expect(readResponse.body).toMatchObject({
-          id          : response.body.songId,
-          titles      : titles,
-          authors     : [],
-          textAuthors : []
-        }); */
+      // Assert
+      expect(response.body).toMatchObject({
+        songId      : expect.any(String),
+        titles      : meta.titles,
+        authors     : meta.authors,
+        textAuthors : meta.textAuthors,
+      });
+      expect(response.status).toBe(201);
+      expect((await controller.getOne(response.body.songId)).body).toMatchObject({
+        id          : response.body.songId,
+        titles      : response.body.titles,
+        authors     : response.body.authors,
+        textAuthors : response.body.textAuthors
       });
     });
+
+
     test("without titles provided throw", async () => {
       // Arrange
       const titles: string[] = [];
@@ -127,25 +101,25 @@ describe("Song data", () => {
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
       await expect(response).rejects.toMatchObject({ code: 422 });
     });
 
-    test("with titles prop is undefined should throw", async () => {
+    test("with titles prop undefined should throw", async () => {
       // Arrange
       const titles: string[] | undefined = undefined;
       const controller = new SongsController(filledContainer());
 
       // Act
       const response = controller.create({
-        titles: titles ?? [],
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles ?? [],
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
@@ -154,46 +128,46 @@ describe("Song data", () => {
 
     test("with only empty strings provided should throw", async () => {
       // Arrange
-      const titles: string[] = ["", ""];
+      const titles: string[] = [ "", "" ];
       const controller = new SongsController(filledContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : [],
       });
 
       // Assert
       await expect(response).rejects.toMatchObject({ code: 422 });
     });
 
-    test("with invalid author id", async () => {
+    test("with ids of not existent authors", async () => {
       // Arrange
-      const titles: string[] = ["testowa"];
-      const controller = new SongsController(filledContainer());
+      const titles: string[] = validTitles["----uuid1-----"];
+      const controller = new SongsController(emptyContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: ["#inva-lid"],
-        textAuthorIds: [],
+        titles        : titles,
+        authorIds     : validArtists.map(x => x.id),
+        textAuthorIds : [],
       });
 
       // Assert
       await expect(response).rejects.toMatchObject({ code: 422 });
     });
 
-    test("with invalid text author id", async () => {
+    test("with ids of not existent performers", async () => {
       // Arrange
-      const titles: string[] = ["testowa"];
-      const controller = new SongsController(filledContainer());
+      const titles: string[] = validTitles["328dfsxzcbhtemjdf"];
+      const controller = new SongsController(emptyContainer());
 
       // Act
       const response = controller.create({
-        titles: titles,
-        authorIds: [],
-        textAuthorIds: ["#inva-lid"],
+        titles        : titles,
+        authorIds     : [],
+        textAuthorIds : validArtists.map(x => x.id),
       });
 
       // Assert

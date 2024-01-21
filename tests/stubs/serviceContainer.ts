@@ -13,18 +13,18 @@ import { ContentService } from "../../src/services/ContentService";
 import { SongService } from "../../src/services/SongsService";
 import { emptyArtistsRepo } from "./artists";
 
-interface FilledContainerRepos {
-  artistRepo: IArtistsRepository;
-  artistRefsRepo: IArtistRefsRepository;
-  contentMetaRepo: IContentMetaRepository;
-  contentDataRepo: IContentDataRepository;
-  titlesRepo: ITitlesRepository;
+export interface FilledContainerRepos {
+  artistRepo      : IArtistsRepository;
+  artistRefsRepo  : IArtistRefsRepository;
+  contentMetaRepo : IContentMetaRepository;
+  contentDataRepo : IContentDataRepository;
+  titlesRepo      : ITitlesRepository;
 }
 
 const filledContainer = (repos: FilledContainerRepos) =>
   new ServiceContainer({
-    authorService: new AuthorService(repos.artistRepo, repos.artistRefsRepo),
-    contentService: new ContentService(
+    authorService  : new AuthorService(repos.artistRepo, repos.artistRefsRepo),
+    contentService : new ContentService(
       repos.contentDataRepo,
       repos.contentMetaRepo
     ),
@@ -33,11 +33,11 @@ const filledContainer = (repos: FilledContainerRepos) =>
 
 export const partialContainer = (repos: Partial<FilledContainerRepos>) => {
   const _repos: FilledContainerRepos = {
-    artistRefsRepo: repos.artistRefsRepo ?? new DummyArtistRefsRepository(),
-    artistRepo: repos.artistRepo ?? emptyArtistsRepo(),
-    contentDataRepo: repos.contentDataRepo ?? new DummyContentDataRepository(),
-    contentMetaRepo: repos.contentMetaRepo ?? new DummyContentMetaRepository(),
-    titlesRepo: repos.titlesRepo ?? new DummyTitlesRepository(),
+    artistRefsRepo  : repos.artistRefsRepo ?? new DummyArtistRefsRepository(),
+    artistRepo      : repos.artistRepo ?? emptyArtistsRepo(),
+    contentDataRepo : repos.contentDataRepo ?? new DummyContentDataRepository(),
+    contentMetaRepo : repos.contentMetaRepo ?? new DummyContentMetaRepository(),
+    titlesRepo      : repos.titlesRepo ?? new DummyTitlesRepository(),
   };
 
   return filledContainer(_repos);

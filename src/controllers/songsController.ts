@@ -1,23 +1,22 @@
 import { Resource } from "../core/Resource";
-import { Response, AsyncResponse } from "../core/Response";
+import { Response, AsyncResponse, Status } from "../core/Response";
 import { Song, SongMeta } from "../models/Song";
-import NotImplementedError from "../core/errors/NotImplementedError";
-import { Validator } from "../core/validator";
 
 export interface CreateSongDtO {
-  titles        : string[];
-  authorIds     : string[];
-  textAuthorIds : string[];
+  titles        : string[] | undefined;
+  authorIds     : string[] | undefined;
+  textAuthorIds : string[] | undefined;
 }
 
 export class SongsController extends Resource {
 
-  get songsService() {
-    return this.services.songService;
-  }
-
-  get authorsService() {
-    return this.services.authorService;
+  async create(body: CreateSongDtO): AsyncResponse<SongMeta> {
+    const song = await this.songsService.createSong({
+      titles        : body.titles,
+      authorIds     : body.authorIds ?? [],
+      textAuthorIds : body.textAuthorIds ?? []
+    });
+    return new Response(song).setStatus(Status.Created);
   }
 
   async getMultiple(): AsyncResponse<Array<SongMeta>> {
@@ -38,27 +37,12 @@ export class SongsController extends Resource {
 
   }
 
-  async create(body: CreateSongDtO): AsyncResponse<unknown> {
+  get authorsService() {
+    return this.services.authorService;
+  }
 
-    const titleErrors = new Validator()
-      .isArray()
-      .isNotEmpty()
-      .getFails(body.titles);
-
-    if(titleErrors.length > 1) throw new Error("Error");
-
-    this.songsService.createSong({ titles: body.titles, authorIds: [], textAuthorIds: [] });
-
-    throw new NotImplementedError();
-
-    const missingProps = [];
-
-    if (body.titles == undefined || body.titles.length < 1) missingProps.push("titles");
-
-    // if (missingProps.length > 0) throw new MissingPropsResponse(missingProps);
-
-
-    return new Response({});
+  get songsService() {
+    return this.services.songService;
   }
 
 }

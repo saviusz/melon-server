@@ -1,6 +1,6 @@
+import Knex from "knex";
 import { describe, expect, it } from "vitest";
 
-import Knex from "knex";
 import knexfile from "../../knexfile";
 import { up } from "../../migrations/20230911212905_init";
 import { ITitlesRepository } from "../../src/repositories/Titles/TitlesRepository.abstract";

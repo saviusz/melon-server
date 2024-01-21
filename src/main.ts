@@ -18,8 +18,8 @@ const port = 3000;
 const database = Knex(knexfile[(process.env["NODE_ENV"] || "test").trim()]);
 
 const container = new ServiceContainer({
-  songService: new SongService(new KnexTitlesRepository(database)),
-  authorService: new AuthorService(
+  songService   : new SongService(new KnexTitlesRepository(database)),
+  authorService : new AuthorService(
     new KnexArtistsRepository(database),
     new KnexArtistRefsRepository(database)
   ),
