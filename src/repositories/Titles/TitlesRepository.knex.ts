@@ -1,4 +1,5 @@
 import { Knex } from "knex";
+
 import { ITitlesRepository } from "./TitlesRepository.abstract";
 
 export class KnexTitlesRepository implements ITitlesRepository {
@@ -6,19 +7,6 @@ export class KnexTitlesRepository implements ITitlesRepository {
   constructor(
     private database: Knex
   ) {}
-
-  async getSongsIds(): Promise<string[]> {
-    const ids = await this.database("titleOnSong")
-      .distinct("songId")
-      .select("songId");
-    return ids.map((x) => x.songId);
-  }
-
-  async getOnSong(songId: string): Promise<string[]> {
-    const response = await this.database("titleOnSong").where({ songId: songId })
-      .select();
-    return response.map(res => res["title"]);
-  }
 
   async add(songId:string, title: string): Promise<string> {
     const resp = await this.database("titleOnSong")
@@ -30,6 +18,19 @@ export class KnexTitlesRepository implements ITitlesRepository {
     const response = await this.database("titleOnSong")
       .insert(titles.map(title => ({ songId: songId, title: title })), "title");
     return response.map(x => x["title"]);
+  }
+
+  async getOnSong(songId: string): Promise<string[]> {
+    const response = await this.database("titleOnSong").where({ songId: songId })
+      .select();
+    return response.map(res => res["title"]);
+  }
+
+  async getSongsIds(): Promise<string[]> {
+    const ids = await this.database("titleOnSong")
+      .distinct("songId")
+      .select("songId");
+    return ids.map((x) => x.songId);
   }
 
 }

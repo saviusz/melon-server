@@ -150,7 +150,7 @@ describe("Song data", () => {
       // Act
       const response = controller.create({
         titles        : titles,
-        authorIds     : validArtists.map(x => x.authorId),
+        authorIds     : validArtists.map(x => x.id),
         textAuthorIds : [],
       });
 
@@ -167,7 +167,7 @@ describe("Song data", () => {
       const response = controller.create({
         titles        : titles,
         authorIds     : [],
-        textAuthorIds : validArtists.map(x => x.authorId),
+        textAuthorIds : validArtists.map(x => x.id),
       });
 
       // Assert

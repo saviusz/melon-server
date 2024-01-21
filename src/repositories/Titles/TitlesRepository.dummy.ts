@@ -1,4 +1,3 @@
-
 import { ITitlesRepository } from "./TitlesRepository.abstract";
 
 export class DummyTitlesRepository implements ITitlesRepository {
