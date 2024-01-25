@@ -2,7 +2,7 @@
   "name": "melon-server",
   "description": "",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "build/src/main.js",
   "dependencies": {
     "@types/http-errors": "^2.0.3",
     "better-sqlite3": "^8.6.0",
@@ -29,11 +29,13 @@
     "vitest": "^0.34.5"
   },
   "scripts": {
+    "start": "node .",
     "start:dev": "set NODE_ENV=development & ts-node-dev ./src/main.ts",
     "test": "vitest --run",
     "test:dev": "vitest",
     "typecheck": "tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "build": "tsc"
   },
   "author": "",
   "license": "ISC"
