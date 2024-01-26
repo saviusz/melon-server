@@ -32,7 +32,7 @@ jobs:
           with:
             tags: |
               type=schedule
-              type=edge,brancmain
+              type=edge,branch=main
               type=ref,event=branch
               type=ref,event=tag
               type=ref,event=pr
