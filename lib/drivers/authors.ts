@@ -2,7 +2,7 @@ import { QueryFn } from "../database/initDB";
 import { Result } from "../Result";
 
 interface Props {
-  id: string;
+  id: number;
   name: string | null;
   pseudonym: string | null;
   surname: string | null;
@@ -10,7 +10,7 @@ interface Props {
 
 export type AuthorInserter = (data: Props) => Result<AuthorRow, unknown>;
 type AuthorRow = {
-  id: string;
+  id: number;
   name: string | null;
   surname: string | null;
   pseudonym: string | null;
