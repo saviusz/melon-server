@@ -9,6 +9,11 @@
     "noEmit": true, // or `emitDeclarationOnly`
     "allowImportingTsExtensions": true,
     "allowArbitraryExtensions": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+
+    "paths": {
+      "@tests/*": ["./tests/"],
+      "@services/*": ["./lib/services/*"]
+    }
   }
 }
