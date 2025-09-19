@@ -1,8 +1,8 @@
-import { createAuthor } from "@services/authors/createAuthor";
+import { createArtist } from "@services/artists/createArtist";
 import { beforeEach, expect, Mock, test, vi } from "vitest";
-import { AuthorInserter } from "../../../lib/drivers/authors";
+import { ArtistInserter } from "../../../lib/drivers/artists";
 
-let authorInserter: Mock<AuthorInserter>;
+let artistInserter: Mock<ArtistInserter>;
 const stubRow = {
   id: "stubId",
   name: "stubName",
@@ -11,7 +11,7 @@ const stubRow = {
 };
 
 beforeEach(() => {
-  authorInserter = vi.fn<AuthorInserter>().mockResolvedValue({
+  artistInserter = vi.fn<ArtistInserter>().mockResolvedValue({
     error: null,
     data: stubRow,
   });
@@ -24,27 +24,27 @@ test("Create with data", async () => {
     surname: "Doe",
   };
 
-  const result = await createAuthor(data, authorInserter);
+  const result = await createArtist(data, artistInserter);
   expect(result.error).toBe(null);
-  expect(authorInserter).toBeCalledWith({
+  expect(artistInserter).toBeCalledWith({
     id: expect.any(String),
     ...data,
   });
   expect(result.data).toMatchObject(stubRow);
 });
 
-test("Created Authors have different ID", async () => {
+test("Created Artists have different ID", async () => {
   const data = {
     name: "John",
     pseudonym: "Guy",
     surname: "Doe",
   };
 
-  await createAuthor(data, authorInserter);
-  const call1 = authorInserter.mock.lastCall;
+  await createArtist(data, artistInserter);
+  const call1 = artistInserter.mock.lastCall;
 
-  await createAuthor(data, authorInserter);
-  expect(authorInserter.mock.lastCall?.[0].id).not.toBe(call1?.[0].id);
+  await createArtist(data, artistInserter);
+  expect(artistInserter.mock.lastCall?.[0].id).not.toBe(call1?.[0].id);
 });
 
 test.each([null, undefined])("Error on no data (%s)", async (stub) => {
@@ -54,12 +54,12 @@ test.each([null, undefined])("Error on no data (%s)", async (stub) => {
     surname: stub,
   };
 
-  const result = await createAuthor(data, authorInserter);
+  const result = await createArtist(data, artistInserter);
   expect(result.error).not.toBe(null);
 });
 
 test("Error on db error", async () => {
-  authorInserter = vi.fn().mockResolvedValue({
+  artistInserter = vi.fn().mockResolvedValue({
     data: null,
     error: "mock error",
   });
@@ -69,6 +69,6 @@ test("Error on db error", async () => {
     surname: null,
   };
 
-  const result = await createAuthor(data, authorInserter);
+  const result = await createArtist(data, artistInserter);
   expect(result.error).not.toBe(null);
 });

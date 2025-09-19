@@ -8,25 +8,25 @@ interface Props {
   surname: string | null;
 }
 
-export type AuthorInserter = (data: Props) => Result<AuthorRow, unknown>;
-type AuthorRow = {
+export type ArtistInserter = (data: Props) => Result<ArtistRow, unknown>;
+type ArtistRow = {
   id: number;
   name: string | null;
   surname: string | null;
   pseudonym: string | null;
 };
 
-export function createAuthorInserter(sql: QueryFn): AuthorInserter {
-  return async (data: Props): Result<AuthorRow, unknown> => {
-    const response = await sql<AuthorRow>`
-    INSERT INTO authors (author_id, name, surname, pseudonym)
+export function createArtistInserter(sql: QueryFn): ArtistInserter {
+  return async (data: Props): Result<ArtistRow, unknown> => {
+    const response = await sql<ArtistRow>`
+    INSERT INTO artists (artist_id, name, surname, pseudonym)
     VALUES (${data.id}, ${data.name}, ${data.surname}, ${data.pseudonym})
     RETURNING *;`;
 
     if (response.error)
       return {
         data: null,
-        error: `Couldn't create Author (${data.id}, ${data.name}, ${data.surname}, ${data.pseudonym})`,
+        error: `Couldn't create Artist (${data.id}, ${data.name}, ${data.surname}, ${data.pseudonym})`,
       };
 
     return {

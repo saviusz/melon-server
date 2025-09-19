@@ -1,4 +1,4 @@
-export interface Author {
+export interface Artist {
   id: string;
   name: string | null;
   surname: string | null;

@@ -1,10 +1,10 @@
 import z, { ZodSafeParseResult } from "zod";
 import { Result } from "../../Result";
-import { Author } from "./Author";
-import { AuthorInserter } from "../../drivers/authors";
+import { Artist } from "./Artist";
+import { ArtistInserter } from "../../drivers/artists";
 import { generateId } from "../../genID";
 
-export const createAuthorSchema = z
+export const createArtistSchema = z
   .object({
     name: z.string().nonempty().nullish(),
     pseudonym: z.string().nonempty().nullish(),
@@ -14,34 +14,34 @@ export const createAuthorSchema = z
     return !(!name && !surname && !pseudonym);
   });
 
-type CreateAuthorProps = z.input<typeof createAuthorSchema>;
+type CreateArtistProps = z.input<typeof createArtistSchema>;
 
-export async function createAuthor(
-  data: CreateAuthorProps,
-  insertAuthor: AuthorInserter,
-): Result<Author, any> {
-  const parseResult: ZodSafeParseResult<CreateAuthorProps> =
-    createAuthorSchema.safeParse(data);
+export async function createArtist(
+  data: CreateArtistProps,
+  insertArtist: ArtistInserter,
+): Result<Artist, any> {
+  const parseResult: ZodSafeParseResult<CreateArtistProps> =
+    createArtistSchema.safeParse(data);
   if (!parseResult.success)
     return {
       error: parseResult.error,
       data: null,
     };
 
-  const { data: author } = parseResult;
+  const { data: artist } = parseResult;
 
   const id = generateId();
 
-  const insertRes = await insertAuthor({
+  const insertRes = await insertArtist({
     id,
-    name: author.name ?? null,
-    pseudonym: author.pseudonym ?? null,
-    surname: author.surname ?? null,
+    name: artist.name ?? null,
+    pseudonym: artist.pseudonym ?? null,
+    surname: artist.surname ?? null,
   });
 
   if (insertRes.error != null || insertRes.data == null)
     return {
-      error: "Couldn't insert Author to db",
+      error: "Couldn't insert Artist to db",
       data: null,
     };
 
