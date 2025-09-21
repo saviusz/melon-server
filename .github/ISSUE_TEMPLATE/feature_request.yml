@@ -1,0 +1,51 @@
+name: ✨ Feature Request
+description: Suggest an improvement or new capability for this project
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Hi! I can't wait to your new, shiny submission. But before that, there's
+        a few questions to  fill.
+
+        Keep in mind that the more context you share, the easier it is to
+        understand why your idea is worth implementing.
+
+        Please take a few minutes to fill in the sections below as clearly as
+        you can. 🙌
+  - type: textarea
+    id: background
+    attributes:
+      label: 🔎 Background
+      description:
+        What's the feature we're missing? Why do we need it? Can we hack it
+        somehow right now?
+      placeholder:
+        I'm missing a way to create multiple foobars with one line. It's
+        stupid, becouse I couldn't spam user.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: 🎯 Expected outcome
+      description: What would success look like once this feature is in place?
+      placeholder: |
+        Sucessfull feature would provide user with ability to...
+        1. User will...
+        2. Code should be...
+        3. Feature would interact with...
+    validations:
+      required: true
+  - type: textarea
+    id: soultions
+    attributes:
+      label: 🛠️ Proposed solution(s)
+      description: How would you implement this feature? Do you have any ideas?
+      placeholder: Just create new class, bro
+  - type: markdown
+    attributes:
+      value: |-
+        🙏 Thanks for contributing
+        I'll look into your request as soon as I'd see it
