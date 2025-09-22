@@ -4,7 +4,7 @@ import { ArtistInserter } from "../../../lib/drivers/artists";
 
 let artistInserter: Mock<ArtistInserter>;
 const stubRow = {
-  id: "stubId",
+  id: "69420",
   name: "stubName",
   pseudonym: "stubPseudo",
   surname: "stubSurname",
@@ -13,7 +13,10 @@ const stubRow = {
 beforeEach(() => {
   artistInserter = vi.fn<ArtistInserter>().mockResolvedValue({
     error: null,
-    data: stubRow,
+    data: {
+      ...stubRow,
+      id: 69420,
+    },
   });
 });
 
@@ -27,7 +30,7 @@ test("Create with data", async () => {
   const result = await createArtist(data, artistInserter);
   expect(result.error).toBe(null);
   expect(artistInserter).toBeCalledWith({
-    id: expect.any(String),
+    id: expect.any(Number),
     ...data,
   });
   expect(result.data).toMatchObject(stubRow);
