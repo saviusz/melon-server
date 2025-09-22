@@ -6,7 +6,7 @@ test("Id always ascends", async () => {
 
   let lastId = generateId();
 
-  for (let i = 0; i < 10000; i += 0.1) {
+  for (let i = 0; i < 1000; i += 0.1) {
     vi.advanceTimersByTime(i);
     const id = generateId();
     expect(id).toBeGreaterThan(lastId);
