@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS artists (
+    artist_id bigint PRIMARY KEY,
+    name text,
+    pseudonym text,
+    surname text
+);
